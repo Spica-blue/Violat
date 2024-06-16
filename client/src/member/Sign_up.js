@@ -1,18 +1,9 @@
-// Login.js
-
+// src/member/sign_up.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from '../header/Header';
 
-function Login() {
-  
-  // const LoginForm1 = () => {
-  //   const [values, setValues] = useState({
-  //     id: "",
-  //     password: "",
-  //   })
-  // }
-
+function SignUp() {
   const [data, setData] = useState([]);
 
   const API_URL = "http://127.0.0.1:8000/";
@@ -29,17 +20,6 @@ function Login() {
   }, []);
 
   return (
-    // <div>
-    //   <div className='Main_box'>
-    //     <input type='text' className='id' value={values.id}>ID</input>
-    //     <input type='password' className='pw' value={values.password}>PASSWORD</input>
-        
-    //   </div>
-    // </div>
-
-
-
-
     <div className="App">
       <Header />
       {data.length > 0 ? (
@@ -56,4 +36,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;

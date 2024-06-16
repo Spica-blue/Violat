@@ -1,4 +1,7 @@
+// App.js
+
 import Login from "./member/Login";
+import Sign_up from "./member/Sign_up";
 import Mainpage from './main/Mainpage';
 import { BrowserRouter, Link, Route, Routes} from "react-router-dom";
 
@@ -28,7 +31,6 @@ function App() {
           <Route path='/asset/history' element={<History/>}/>
           <Route path='/asset/rankings' element={<Rankings/>}/>
         </Routes>
-        
       </BrowserRouter>
       <Footer/>
     </div>
