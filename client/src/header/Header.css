@@ -1,0 +1,26 @@
+/* src/header/Header.css */
+.header {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  background-color: rgb(255, 0, 0);
+  height: 5rem;
+  color: black;
+  z-index: 0;
+  padding: 0 1rem;
+}
+
+
+.list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-img {
+  width: 70px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+}
