@@ -1,0 +1,27 @@
+.body{
+    background-image: url('https://wbstatic.webullfintech.com/v1/webull-us-g/assets/77ac67cea715a7e26a86e4c874064b15.webp');
+    height: 100vh;
+}
+.user-img{
+    width: 70px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+}
+.login_link{
+    font-size: 20px;
+}
+.title{
+    display: flex;
+    justify-content: center;
+    color: white;
+}
+.box1{
+    float: right;
+    margin-right: 20px;
+    width: 50%;
+    height: 90%;
+    background-color: white;
+    border-radius: 4px;
+}
