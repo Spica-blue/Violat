@@ -1,0 +1,236 @@
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, pre, a, abbr, acronym, cite, code, del, dfn, em, img, ins, q, s, samp, strike, strong, sub, sup, u, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, embed {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+}
+
+.mainB {
+    min-height: calc(100vh - 292px);
+}
+.mainB {
+    position: relative;
+    width: 1400px;
+    margin: 0 auto 60px auto;
+    padding-top: 72px;
+    -webkit-transition: all .4s ease-out;
+    transition: all .4s ease-out;
+    -moz-transition: all .4s ease-out;
+    -o-transition: all .4s ease-out;
+}
+
+.ty01 {
+    float: left;
+    width: 90%;
+}
+.ty02 {
+    position: sticky;
+    top: 72px;
+    float: right;
+    width: 400px;
+}
+section article {
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+.MyTrade {
+    height: 826px;
+}
+
+.TradeState__section__amount {
+    width: 590px;
+    padding: 25px 30px;
+    float: left;
+    height: 244px;
+    box-sizing: border-box;
+}
+.TradeState__section_graph {
+    width: 400px;
+    border-left: 1px solid #eee;
+    float: left;
+    height: 244px;
+    box-sizing: border-box;
+}
+
+.TradeAmount {
+    margin-bottom: 28px;
+}
+
+.TradeAmount__row--total {
+    margin-top: 0;
+    margin-bottom: 5px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #eee;
+}
+.TradeAmount__row {
+    display: table;
+    float: left;
+    width: 236px;
+    margin-top: 12px;
+}
+
+.TradeAmount__TitleCell {
+    display: table-cell;
+}
+
+.TradeAmount__title {
+    font-size: 14px;
+    color: #666;
+}
+
+.TradeAmount__CountCell {
+    display: table-cell;
+    text-align: right;
+}
+
+.TradeAmount__count--total {
+    font-size: 20px;
+}
+.TradeAmount__count {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.TradeAmount__unit {
+    display: inline-block;
+    padding-left: 7px;
+    vertical-align: bottom;
+    font-size: 11px;
+    color: #999;
+}
+.TradeAmount__row__total:nth-child(even) {
+    padding-left: 50px;
+}
+.TradeAmount__row__total {
+    margin-top: 0;
+    margin-bottom: 5px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    display: table;
+    float: left;
+    width: 236px;
+}
+
+.TradeAmount__count {
+    font-size: 20px;
+}
+.TradeAmount__unit {
+    display: inline-block;
+    padding-left: 7px;
+    vertical-align: bottom;
+    font-size: 11px;
+    color: #999;
+}
+.TradeAmount__row {
+    display: table;
+    float: left;
+    width: 236px;
+    margin-top: 12px;
+}
+.TradeAmount__row:nth-child(even) {
+    padding-left: 50px;
+}
+.TradeState__section--graph {
+    width: 400px;
+    border-left: 1px solid #eee;
+}
+
+.TradeGraph {
+    position: relative;
+    height: 100%;
+}
+.TradeGraph__EmptyText {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #999;
+    box-sizing: border-box;
+}
+
+.MyTrade__TradeState {
+    width: 990px;
+    height: 244px;
+    display: block;
+    clear: both;
+    content: "";
+}
+.AmountTable__Header {
+    border-top: 1px solid #eee;
+    display: flex;
+    height: 42px;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    align-items: center;
+}
+.AmountTable__title {
+    font-size: 15px;
+    font-weight: 500;
+    flex: 1;
+}
+.AmountTable__option {
+    flex: 1;
+    text-align: right;
+}
+.chkB {
+    text-align: left;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.chkB a {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(https://cdn.upbit.com/upbit-web/images/bg.feb3506.png) -120px -50px no-repeat;
+    overflow: hidden;
+    text-indent: -999em;
+    vertical-align: middle;
+}
+.AmountTable__option .chkB label {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+.AmountTable__option .chkB__label {
+    font-size: 12px;
+    color: #333;
+}
+.AmountTable__option .chkB__subTxt {
+    font-size: 12px;
+    color: #999;
+}
+.mainB section article table {
+    width: 100%;
+}
+.AmountTable__HeadTable, .AmountTable__BodyTable {
+    width: 100%;
+}
+.AmountTable__HeadTable {
+    border-top: 1px solid #ddd;
+}
+table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.mainB section article table thead th {
+    height: 30px;
+    background-color: rgb(249, 250, 252);
+    color: rgb(102, 102, 102);
+    font-family: Roboto, "Noto Sans KR", Dotum, 돋움, "sans-serif", Arial, Helvetica;
+    font-size: 11px;
+}
+.mainB section article table thead th a {
+    color: #666;
+}
+
+.mainB section article table thead th a img {
+    vertical-align: middle;
+}

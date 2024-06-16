@@ -1,0 +1,30 @@
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, pre, a, abbr, acronym, cite, code, del, dfn, em, img, ins, q, s, samp, strike, strong, sub, sup, u, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, embed {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+}
+.tab__list {
+    display: flex;
+}
+.tab__item {
+    flex: 1;
+}
+.tab__item__link {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 45px;
+    border-bottom: 1px solid #ddd;
+    line-height: 45px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+.tab__item__link__active {
+    border-bottom: 3px solid #0062df;
+    color: #0062df;
+    font-weight: 700;
+}
