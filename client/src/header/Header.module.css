@@ -1,0 +1,43 @@
+/* src/header/Header.module.css */
+
+.h1{
+  font-size: 2rem;
+  color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(25, 0, 255);
+  height: 4rem;
+  color: black;
+  /* padding: 0 1rem; */
+}
+
+.list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.row{ /* ------ */
+  font-size: 20px;
+  margin: 0 40px 0 40px;
+  color: white;
+}
+
+.userImg { 
+  width: 4rem;
+  margin-left: auto;
+  margin-right: 10px;
+  background-color: rgb(153, 153, 153);
+}
+
+.investment{
+  color: white;
+}
+
+.investment:hover{
+  color: rgb(0, 157, 255);
+}
