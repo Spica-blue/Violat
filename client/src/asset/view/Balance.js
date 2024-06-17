@@ -26,7 +26,7 @@ export default function Balance() {
     fetch('http://127.0.0.1:8000/asset/balance')
     .then(res => {
         if (res.ok) {
-            return res.json();
+            console.log(res.json())
         } else {
             throw new Error('Network response was not ok');
         }
