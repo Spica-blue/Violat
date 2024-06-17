@@ -1,14 +1,21 @@
 /* src/main/Mainpage.css */
+.h1{
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.h3{
+  font-size: 1rem;
+}
+
+
 .body {
   background-image: url('https://wbstatic.webullfintech.com/v1/webull-us-g/assets/77ac67cea715a7e26a86e4c874064b15.webp');
-  height: calc(100vh - 5rem);
+  height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
   
-}
-
-.login_link {
-  font-size: 20px;
 }
 
 .title {
