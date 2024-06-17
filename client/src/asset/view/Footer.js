@@ -1,5 +1,5 @@
 import styles from '../css/Footer.module.css';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 export default function Footer() {
 
@@ -94,7 +94,7 @@ export default function Footer() {
                                 <li className={styles.css_l1ok}>
                                     <a href="/service_center/open_api_guide">Open API</a>
                                 </li>
-                                <li class={styles.css_l1ok}>
+                                <li className={styles.css_l1ok}>
                                     <a target="_blank" rel="noopener noreferrer" href="https://upbitcs.zendesk.com/hc/ko/articles/4403838454809-%EA%B1%B0%EB%9E%98-%EC%9D%B4%EC%9A%A9-%EC%95%88%EB%82%B4">거래 이용 안내</a>
                                 </li>
                                 <li className={styles.css_l1ok}>

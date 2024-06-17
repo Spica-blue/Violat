@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     
     'corsheaders',
     'rest_framework',
+    
+    # Asset
+    'asset.apps.AssetConfig',
 ]
 
 MIDDLEWARE = [
@@ -125,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -141,3 +144,61 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'asset': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    }
+}
+
+# 기존 LOGGING 설정을 덮어씁니다.
+LOGGING = DEFAULT_LOGGING

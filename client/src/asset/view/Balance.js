@@ -23,6 +23,15 @@ export default function Balance() {
         // 더 많은 데이터 추가
     ];
 
+    fetch('http://127.0.0.1:8000/asset/balance')
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error('Network response was not ok');
+        }
+    })
+
     return (
         <>
             <div className={styles.mainB} style={{margin: "0px auto"}}>
@@ -124,16 +133,16 @@ export default function Balance() {
                                             <th>보유자산</th>
                                             <th>보유수량</th>
                                             <th className={styles.AmountTable__HeadTitle}>
-                                                <a href="#">매수평균가 <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></a>
+                                                <Link to="#">매수평균가 <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></Link>
                                             </th>
                                             <th className={styles.AmountTable__HeadTitle}>
-                                                <a href="#">매수금액 <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></a>
+                                                <Link to="#">매수금액 <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></Link>
                                             </th>
                                             <th className={styles.AmountTable__HeadTitle}>
-                                                <a href="#" className={styles.selected}>평가금액 <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></a>
+                                                <Link to="#" className={styles.selected}>평가금액 <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></Link>
                                             </th>
-                                            <th className="AmountTable__HeadTitle">
-                                                <a href="#">평가손익(%) <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></a>
+                                            <th className={styles.AmountTable__HeadTitle}>
+                                                <Link to="#">평가손익(%) <img src="https://cdn.upbit.com/upbit-web/images/ico_sort.52f3f4e.png" alt=""/></Link>
                                             </th>
                                             <th>&nbsp;</th>
                                         </tr>
