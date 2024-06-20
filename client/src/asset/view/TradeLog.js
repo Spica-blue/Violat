@@ -41,7 +41,7 @@ export default function TradeLog() {
                         <div className={styles.ExHistoryTable}>
                             <table>
                                 <colgroup>
-                                    <col width="120px" />
+                                    <col width="150px" />
                                     <col width="90px" />
                                     <col width="70px" />
                                     <col />
@@ -62,7 +62,7 @@ export default function TradeLog() {
                         <div className={styles.ExHistoryTable}>
                             <table>
                                 <colgroup>
-                                    <col width="120px" />
+                                    <col width="150px" />
                                     <col width="90px" />
                                     <col width="70px" />
                                     <col />

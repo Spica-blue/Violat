@@ -1,9 +1,11 @@
+import { useParams } from 'react-router-dom';
 import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
 
 export default function Sell() {
+    const { stockName } = useParams(); // Get stockName from URL
     const [isLoading, setIsLoading] = useState(false);
-    const [stockCode, setStockCode] = useState('');
+    const [stockCode, setStockCode] = useState(stockName);
     const [quantity, setQuantity] = useState('');
     const [price, setPrice] = useState('');
     const [totalAmount, setTotalAmount] = useState('');
@@ -79,6 +81,12 @@ export default function Sell() {
             setIsLoading(false);
         });
     }
+
+    useEffect(() => {
+        if (stockName) {
+            setStockCode(stockName); // Set the stock code when stockName changes
+        }
+    }, [stockName]);
 
     return (
         <>

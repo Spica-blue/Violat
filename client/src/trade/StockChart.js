@@ -23,7 +23,7 @@ const StockChart = () => {
     const { stockName } = useParams(); // useParams 훅을 사용하여 URL에서 stockName을 가져옴
     const [realtimeData, setRealtimeData] = useState([]);
     const [dailyData, setDailyData] = useState([]);
-    const [showRealtime, setShowRealtime] = useState(true);
+    const [showRealtime, setShowRealtime] = useState(false);
     const [volumeData, setVolumeData] = useState([]);
     const [currentPrice, setCurrentPrice] = useState(null);
 
@@ -187,7 +187,7 @@ const StockChart = () => {
             text: stockName,
             align: 'center',
             style: {
-                fontSize: '13px',
+                fontSize: '16px',
                 fontWeight: 'bold'
             }
         }
@@ -254,7 +254,15 @@ const StockChart = () => {
             },
             title: {
                 display: true,
-                text: stockName
+                text: stockName,
+                font: {
+                    size: 16,
+                    weight: 'bold'
+                },
+                padding: {
+                    top:8,
+                    bottom: 15
+                }
             },
             tooltip: {
                 mode: 'index',
@@ -274,8 +282,10 @@ const StockChart = () => {
     return (
         <div className={styles.chart}>
             <div>
-                <button onClick={handleShowRealtime}>Realtime</button>
-                <button onClick={handleShowDaily}>Daily</button>
+                <div className={styles.btn_div}>
+                    <button onClick={handleShowRealtime} className={styles.line}>라인차트</button>
+                    <button onClick={handleShowDaily} className={styles.candle}>캔들차트</button>
+                </div>
                 {showRealtime ? (
                     <Line options={lineChartOptions} data={realtimeChartData}/>
                 ) : (

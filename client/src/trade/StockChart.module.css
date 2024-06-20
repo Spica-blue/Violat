@@ -1,3 +1,20 @@
 .chart{
   background-color: white;
 }
+
+.line, .candle{
+  background: white;
+  border: none;
+  margin: 10px 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.line:hover, .candle:hover{
+  cursor: pointer;
+  color: rgb(146, 146, 146);
+}
+
+.btn_div{
+  /* margin: 10px 10px; */
+}

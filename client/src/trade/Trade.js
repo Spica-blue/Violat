@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Route, Routes } from "react-router-dom";
 import Buy from "../asset/view/Buy";
 import Sell from "../asset/view/Sell";
 import TradeHeader from "../asset/view/TradeHeader";
