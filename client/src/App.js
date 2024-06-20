@@ -14,6 +14,7 @@ import SignUp from "./member/SignUp";
 import TradeLog from "./asset/view/TradeLog";
 import Buy from "./asset/view/Buy";
 import Sell from "./asset/view/Sell";
+import Mypage from './member/Mypage';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/" element= {<Mainpage/>} />
           <Route path="/member/SignUp" element= {<SignUp/>} />
           <Route path="/member/login" element= {<Login/>} />
+          <Route path="/member/Mypage" element= {<Mypage/>} />
           <Route path='/asset/balance' element={<Balance/>}/>
           <Route path='/asset/income' element={<Income/>}/>
           <Route path='/asset/history' element={<History/>}/>
