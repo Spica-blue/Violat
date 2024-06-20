@@ -250,17 +250,11 @@ article .tabB ul li a {
     -webkit-box-pack: start;
     justify-content: flex-start;
 }
-
 .css_kej88d a:nth-of-type(2) {
     --bg-color: #c84a31;
     width: 328px;
     background-color: var(--bg-color);
 }
-
-
-
-
-
 .css_1baek4h > div:first-of-type > div > :nth-of-type(2) {
     --font-color: #999999;
     color: var(--font-color);

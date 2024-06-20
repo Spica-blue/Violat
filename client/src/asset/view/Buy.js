@@ -119,12 +119,12 @@ export default function Buy() {
                                                 onChange={(e) => setPrice(e.target.value)}
                                             />
                                             <div>
-                                                <button type="button" title="-" onClick={() => setPrice(prev => Math.max(0, Number(prev) - 1).toString())}>
+                                                <button type="button" title="-" onClick={() => setPrice(prev => Math.max(0, Number(prev) - 1000).toString())}> -
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" className={styles.css_11uuyrb}>
                                                         <use href="#ic_calc_minus"></use>
                                                     </svg>
                                                 </button>
-                                                <button type="button" title="+" onClick={() => setPrice(prev => (Number(prev) + 1).toString())}>
+                                                <button type="button" title="+" onClick={() => setPrice(prev => (Number(prev) + 1000).toString())}> +
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" className={styles.css_11uuyrb}>
                                                         <use href="#ic_calc_plus"></use>
                                                     </svg>
