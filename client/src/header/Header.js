@@ -51,7 +51,7 @@ function Header() {
       localStorage.removeItem('refresh_token');
       alert("로그아웃 성공");
       setIsLoggedIn(false); //로그인 상태 false로 변환
-      navigate('/member/login');
+      navigate('/member/Login');
     } catch (error) {
       console.error('로그아웃 실패:', error.response ? error.response.data : error.message);
     }
@@ -62,8 +62,8 @@ function Header() {
   };
 
   const handleClickMain = () => {
-    navigate('/')
-  }
+    navigate('/');
+  };
 
   const handleClickMypage = () => 
     {isLoggedIn ? (
@@ -71,6 +71,8 @@ function Header() {
     ) : (
       navigate('/member/Login')
     )}
+  
+    
 
   return (
     <div className={styles.header}>
@@ -81,12 +83,10 @@ function Header() {
       </div>
       <div className={styles.list}>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="/trade/stock" title='거래소'>
-            거래소
+          <NavLink className={styles.investment} to="#" title='가상계좌개설'>
+            가상계좌개설
           </NavLink>
         </div>
-        
-        <div className={styles.row}>입출금</div>
         <div className={styles.row}>
           <NavLink className={styles.investment} to="../asset/balance" title='투자내역'>
             투자내역
@@ -102,7 +102,6 @@ function Header() {
             트레이드
           </NavLink>
         </div>
-        <div className={styles.row}>NFT</div>
         <div className={styles.row}>
           <div onClick={handleClickMypage} className={styles.investment}>
             마이페이지
