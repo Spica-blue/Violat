@@ -173,7 +173,7 @@ export default function Sell() {
                         <div className={styles.css_1gf7e9w}>
                             <div className={styles.css_xsmrp6}>
                                 <button title="초기화" className={styles.css_1xupxm9} onClick={() => { setStockCode(''); setQuantity(''); setPrice(''); setTotalAmount(''); }}>초기화</button>
-                                <button title="매도" className={styles.css_1xupxm9} disabled={isLoading}>
+                                <button title="매도" className={styles.css_1xupxm11} disabled={isLoading}>
                                     {isLoading ? "진행중" : "매도"}
                                 </button>
                             </div>
