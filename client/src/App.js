@@ -4,7 +4,7 @@ import Login from "./member/Login";
 import SignUp from "./member/SignUp";
 import Mypage from "./member/Mypage";
 import Mainpage from './main/Mainpage';
-import { BrowserRouter, Link, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes} from "react-router-dom";
 
 import Header from './header/Header';
 import Balance from './asset/view/Balance';
@@ -20,10 +20,6 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Header/>
-        <Link to={"/asset/balance"}>Balance</Link>
-        <Link to={"/asset/income"}>Income</Link>
-        <Link to={"/asset/history"}>History</Link>
-        <Link to={"/asset/rankings"}>Rankings</Link>
         <Routes>
           <Route path="/" element= {<Mainpage/>} />
           <Route path="/member/SignUp" element= {<SignUp/>} />

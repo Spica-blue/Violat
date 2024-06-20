@@ -1,5 +1,5 @@
 # views.py
-
+import random
 import os
 import sys
 sys.setrecursionlimit(2000)
@@ -78,28 +78,38 @@ def check_login_status(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def signup(request):
+  try:
     username = request.data.get('id')
     password = request.data.get('password')
 
     if not username or not password:
-        return Response({'success': False, 'message': '아이디와 비밀번호를 입력해주세요.'}, status=400)
+      return Response({'success': False, 'message': '아이디와 비밀번호를 입력해주세요.'}, status=400)
 
     collection = db["member"]
 
     if collection.find_one({'id': username}):
-        return Response({'success': False, 'message': '이미 존재하는 아이디입니다.'}, status=400)
+      return Response({'success': False, 'message': '이미 존재하는 아이디입니다.'}, status=400)
+    
+    account_number = random.randint(10000, 99999)
+    print("계좌 생성", account_number, flush=True);
 
     new_user = {
-        'id': username,
-        'pwd': password
+      'id': username,
+      'pwd': password,
+      'account': account_number
     }
 
     collection.insert_one(new_user)
+    print("계좌 적용");
 
     return Response({
-        'success': True,
-        'message': '회원가입이 성공적으로 완료되었습니다.',
+      'success': True,
+      'message': '회원가입이 성공적으로 완료되었습니다.',
     }, status=201)
+  except Exception as e:
+    print(f"에러에러: {str(e)}")
+    return Response({'message' : '회원가입 에러', 'error': str(e)}, status=500)
+    
 
 
 @api_view(['POST'])
