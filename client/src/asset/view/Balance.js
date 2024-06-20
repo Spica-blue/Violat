@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function Balance() {
     const [data, setData] = useState(null); // 초기 상태를 null로 설정
     const [detailData, setDetailData] = useState(null); // 초기 상태를 null로 설정
+    const sessionId = window.sessionStorage.getItem("sessionid");
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/balance')
