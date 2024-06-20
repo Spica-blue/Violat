@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react';
 import styles from '../css/TradeLog.module.css';
 
-export default function TradeLog() {
+export default function TradeLog({ reloadLog }) {
     const [logData, setLogData] = useState([]);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/tradeLog')
-            .then(res => res.json())
-            .then(data => {
+        .then(res => res.json())
+        .then(data => {
+            if (data !== undefined) {
                 setLogData(data);
-                console.log(data);
-            });
-    }, []);
+            } else {
+                console.error('Unexpected response:', data);
+                setLogData([]);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching trade log:', error);
+            setLogData([]); // 기본값 설정
+        });
+    }, [reloadLog]); // reloadLog 상태 변경 시마다 데이터 로드
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -69,11 +77,6 @@ export default function TradeLog() {
                                     <col width="64px" />
                                 </colgroup>
                                 <tbody>
-                                    {/* <tr>
-                                        <td colSpan="5" className={styles.ExHistoryTable__Empty}>
-                                            <span className={styles.ExHistoryTable__EmptyText}>미체결 내역이 없습니다.</span>
-                                        </td>
-                                    </tr> */}
                                     {logData.map((items, index) => (
                                         <tr key={index}>
                                             <td>{formatDate(items.trade_time)}</td>
