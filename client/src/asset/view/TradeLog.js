@@ -3,6 +3,7 @@ import styles from '../css/TradeLog.module.css';
 
 export default function TradeLog({ reloadLog }) {
     const [logData, setLogData] = useState([]);
+    const sessionId = window.sessionStorage.getItem("sessionid");
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/tradeLog')
@@ -27,12 +28,78 @@ export default function TradeLog({ reloadLog }) {
     };
 
     return (
-        <article>
-            <span className={styles.orderB}>
-                <div className={styles.max}>
-                    <div className={styles.ExHistorySet}>
-                        <div className={styles.ExHistorySet__Radio}></div>
-                        <div className={styles.ExHistorySet__Filter}></div>
+        <>
+            <article>
+                <span className={styles.orderB}>
+                    <div className={styles.max}>
+                        <div className={styles.ExHistorySet}>
+                            <div className={styles.ExHistorySet__Radio}>
+                                {/* <span className={styles.globalRadio_blue}>
+                                    <input type="radio" id="ExHistory_openorder" name="ExHistory_radio"/>
+                                    <label htmlFor="ExHistory_openorder">미체결</label>
+                                </span>
+                                <span className={styles.globalRadio_blue}>
+                                    <input type="radio" id="ExHistory_completed" name="ExHistory_radio"/>
+                                    <label htmlFor="ExHistory_completed">체결</label>
+                                </span> */}
+                            </div>
+                            <div className={styles.ExHistorySet__Filter}>
+
+                            </div>
+                        </div>
+                        <div className={styles.ExHistoryTable}>
+                            <table>
+                                <colgroup>
+                                    <col width="150px" />
+                                    <col width="90px" />
+                                    <col width="70px" />
+                                    <col />
+                                    <col width="64px" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>주문일자</th>
+                                        <th>종목명</th>
+                                        <th>매수/매도</th>
+                                        <th>주문총액</th>
+                                        <th>주문가</th>
+                                        <th>주문량</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div className={styles.ExHistoryTable}>
+                            <table>
+                                <colgroup>
+                                    <col width="150px" />
+                                    <col width="90px" />
+                                    <col width="70px" />
+                                    <col />
+                                    <col width="64px" />
+                                </colgroup>
+                                <tbody>
+                                    {sessionId ? (
+                                        logData.map((items, index) => (
+                                            <tr key={index}>
+                                                <td>{formatDate(items.trade_time)}</td>
+                                                <td>{items.stock_code}</td>
+                                                <td>{items.buy_or_sell}</td>
+                                                <td>{items.order_price}</td>
+                                                <td>{items.trade_price}</td>
+                                                <td>{items.trade_quantity}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <div style={{    
+                                            position: 'absolute',
+                                            top: '250px',
+                                            left: '36%'}}>
+                                            로그인시 이용가능합니다.
+                                        </div>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div className={styles.ExHistoryTable}>
                         <table>
@@ -80,8 +147,8 @@ export default function TradeLog({ reloadLog }) {
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </span>
-        </article>
+                </span>
+            </article>
+        </>
     );
 }

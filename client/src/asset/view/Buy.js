@@ -1,6 +1,6 @@
 import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function Buy({ onTradeComplete }) {
     const { stockName } = useParams(); // useParams 훅으로 URL에서 stockName을 가져옴
@@ -11,6 +11,8 @@ export default function Buy({ onTradeComplete }) {
     const [price, setPrice] = useState('');
     const [totalAmount, setTotalAmount] = useState('');
     const [availableBalance, setAvailableBalance] = useState(0);
+    const navigate = useNavigate();
+    const sessionId = window.sessionStorage.getItem("sessionid");
 
     console.log("이름 가져옴?",stockName);
 
@@ -95,6 +97,14 @@ export default function Buy({ onTradeComplete }) {
         }
     }, [stockName]);
     
+    const handleClickBuy = () => {
+        if (sessionId) {
+          navigate('/');
+        } else {
+          alert("로그인시 이용가능합니다.");
+          navigate('/member/Login');
+        }
+    }
 
     return (
         <>
@@ -191,7 +201,7 @@ export default function Buy({ onTradeComplete }) {
                         <div className={styles.css_1gf7e9w}>
                             <div className={styles.css_xsmrp6}>
                                 <button title="초기화" className={styles.css_1xupxm9} onClick={() => { setStockCode(''); setQuantity(''); setPrice(''); setTotalAmount(''); }}>초기화</button>
-                                <button title="매수" className={styles.css_1xupxm10} disabled={isLoading}>
+                                <button onClick={handleClickBuy} title="매수" className={styles.css_1xupxm10} disabled={isLoading}>
                                     {isLoading ? "진행중" : "매수"}
                                 </button>
                             </div>
