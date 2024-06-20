@@ -1,36 +1,22 @@
 import { Link } from "react-router-dom";
 import styles from "../css/Balance.module.css";
 import AssetHeader from "./AssetHeader";
+import { useEffect, useState } from "react";
 
 export default function Balance() {
-    const exampleData = [
-        {
-          asset: 'Bitcoin',
-          quantity: '1.5 BTC',
-          averagePrice: '50,000 USD',
-          purchaseAmount: '75,000 USD',
-          evaluationAmount: '90,000 USD',
-          evaluationProfit: '20%',
-        },
-        {
-          asset: 'Ethereum',
-          quantity: '10 ETH',
-          averagePrice: '3,000 USD',
-          purchaseAmount: '30,000 USD',
-          evaluationAmount: '35,000 USD',
-          evaluationProfit: '16.67%',
-        },
-        // 더 많은 데이터 추가
-    ];
 
-    fetch('http://127.0.0.1:8000/asset/balance')
-    .then(res => {
-        if (res.ok) {
-            console.log(res.json())
-        } else {
-            throw new Error('Network response was not ok');
-        }
-    })
+    const [data, setData] = useState([]);
+    
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/asset/balance')
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            setData(data);
+            console.log(data);
+        })
+    }, [])
 
     return (
         <>
@@ -39,80 +25,82 @@ export default function Balance() {
                     <article>
                         <AssetHeader/>
                         <div className={styles.MyTrade}>
-                            <div className={styles.MyTrade__TradeState}>
-                                <div className={styles.TradeState__section__amount}>
-                                    <div className={styles.TradeAmount}>
-                                        <dl className={styles.TradeAmount__row__total}>
-                                            <dt className={styles.TradeAmount__TitleCell}>
-                                                <span className={styles.TradeAmount__title}>보유 KRW</span>
-                                            </dt>
-                                            <dd className={styles.TradeAmount__CountCell}>
-                                                <span className={styles.TradeAmount__count}>
-                                                    0<i className={styles.TradeAmount__unit}>KRW</i>
-                                                </span>
-                                            </dd>
-                                        </dl>
-                                        <dl className={styles.TradeAmount__row__total}>
-                                            <dt className={styles.TradeAmount__TitleCell}>
-                                                <span className={styles.TradeAmount__title}>총 보유자산</span>
-                                            </dt>
-                                            <dd className={styles.TradeAmount__CountCell}>
-                                                <span className={styles.TradeAmount__count}>0<i className={styles.TradeAmount__unit}>KRW</i></span>
-                                            </dd>
-                                        </dl>
+                            {data.map(item => (
+                                <div className={styles.MyTrade__TradeState} key={item.account_num}>
+                                    <div className={styles.TradeState__section__amount}>
+                                        <div className={styles.TradeAmount}>
+                                            <dl className={styles.TradeAmount__row__total}>
+                                                <dt className={styles.TradeAmount__TitleCell}>
+                                                    <span className={styles.TradeAmount__title}>보유 KRW</span>
+                                                </dt>
+                                                <dd className={styles.TradeAmount__CountCell}>
+                                                    <span className={styles.TradeAmount__count}>
+                                                        {item.deposit}<i className={styles.TradeAmount__unit}>KRW</i>
+                                                    </span>
+                                                </dd>
+                                            </dl>
+                                            <dl className={styles.TradeAmount__row__total}>
+                                                <dt className={styles.TradeAmount__TitleCell}>
+                                                    <span className={styles.TradeAmount__title}>설정한도</span>
+                                                </dt>
+                                                <dd className={styles.TradeAmount__CountCell}>
+                                                    <span className={styles.TradeAmount__count}>{item.deposit_limit}<i className={styles.TradeAmount__unit}>KRW</i></span>
+                                                </dd>
+                                            </dl>
 
-                                        <dl className={styles.TradeAmount__row}>
-                                            <dt className={styles.TradeAmount__TitleCell}>
-                                                <span className={styles.TradeAmount__title}>총 매수</span>
-                                            </dt>
-                                            <dd className={styles.TradeAmount__CountCell}>
-                                                <span className={styles.TradeAmount__count}>0<i className={styles.TradeAmount__unit}>KRW</i></span>
-                                            </dd>
-                                        </dl>
+                                            <dl className={styles.TradeAmount__row}>
+                                                <dt className={styles.TradeAmount__TitleCell}>
+                                                    <span className={styles.TradeAmount__title}>총 매수</span>
+                                                </dt>
+                                                <dd className={styles.TradeAmount__CountCell}>
+                                                    <span className={styles.TradeAmount__count}>0<i className={styles.TradeAmount__unit}>KRW</i></span>
+                                                </dd>
+                                            </dl>
 
-                                        <dl className={styles.TradeAmount__row}>
-                                            <dt className={styles.TradeAmount__TitleCell}>
-                                                <span className={styles.TradeAmount__title}>총평가손익</span>
-                                            </dt>
-                                            <dd className={styles.TradeAmount__CountCell}>
-                                                <span className={styles.TradeAmount__count}>-<i className={styles.TradeAmount__unit}>KRW</i></span>
-                                            </dd>
-                                        </dl>
+                                            <dl className={styles.TradeAmount__row}>
+                                                <dt className={styles.TradeAmount__TitleCell}>
+                                                    <span className={styles.TradeAmount__title}>총평가손익</span>
+                                                </dt>
+                                                <dd className={styles.TradeAmount__CountCell}>
+                                                    <span className={styles.TradeAmount__count}>-<i className={styles.TradeAmount__unit}>KRW</i></span>
+                                                </dd>
+                                            </dl>
 
-                                        <dl className={styles.TradeAmount__row}>
-                                            <dt className={styles.TradeAmount__TitleCell}>
-                                                <span className={styles.TradeAmount__title}>총 평가</span>
-                                            </dt>
-                                            <dd className={styles.TradeAmount__CountCell}>
-                                                <span className={styles.TradeAmount__count}>-<i className={styles.TradeAmount__unit}>KRW</i></span>
-                                            </dd>
-                                        </dl>
+                                            <dl className={styles.TradeAmount__row}>
+                                                <dt className={styles.TradeAmount__TitleCell}>
+                                                    <span className={styles.TradeAmount__title}>총 평가</span>
+                                                </dt>
+                                                <dd className={styles.TradeAmount__CountCell}>
+                                                    <span className={styles.TradeAmount__count}>-<i className={styles.TradeAmount__unit}>KRW</i></span>
+                                                </dd>
+                                            </dl>
 
-                                        <dl className={styles.TradeAmount__row}>
-                                            <dt className={styles.TradeAmount__TitleCell}>
-                                                <span className={styles.TradeAmount__title}>총평가수익률</span>
-                                            </dt>
-                                            <dd className={styles.TradeAmount__CountCell}>
-                                                <span className={styles.TradeAmount__count}>-<i className={styles.TradeAmount__unit}>%</i></span>
-                                            </dd>
-                                        </dl>
+                                            <dl className={styles.TradeAmount__row}>
+                                                <dt className={styles.TradeAmount__TitleCell}>
+                                                    <span className={styles.TradeAmount__title}>총평가수익률</span>
+                                                </dt>
+                                                <dd className={styles.TradeAmount__CountCell}>
+                                                    <span className={styles.TradeAmount__count}>-<i className={styles.TradeAmount__unit}>%</i></span>
+                                                </dd>
+                                            </dl>
 
-                                        <dl className={styles.TradeAmount__row}>
-                                            <dt className={styles.TradeAmount__TitleCell}>
-                                                <span className={styles.TradeAmount__title}>주문가능</span>
-                                            </dt>
-                                            <dd className={styles.TradeAmount__CountCell}>
-                                                <span className={styles.TradeAmount__count}>0<i className={styles.TradeAmount__unit}>KRW</i></span>
-                                            </dd>
-                                        </dl>
+                                            <dl className={styles.TradeAmount__row}>
+                                                <dt className={styles.TradeAmount__TitleCell}>
+                                                    <span className={styles.TradeAmount__title}>주문가능</span>
+                                                </dt>
+                                                <dd className={styles.TradeAmount__CountCell}>
+                                                    <span className={styles.TradeAmount__count}>0<i className={styles.TradeAmount__unit}>KRW</i></span>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                    <div className={styles.TradeState__section_graph}>
+                                        <div className={styles.TradeGraph}>
+                                            <div className={styles.TradeGraph__EmptyText}>보유자산 비중 그래프가 제공됩니다.</div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className={styles.TradeState__section_graph}>
-                                    <div className={styles.TradeGraph}>
-                                        <div className={styles.TradeGraph__EmptyText}>보유자산 비중 그래프가 제공됩니다.</div>
-                                    </div>
-                                </div>
-                            </div>
+                            ))}
                             <div className={styles.AmontTable}>
                                 <div className={styles.AmountTable__Header}>
                                     <h5 className={styles.AmountTable__title}>보유자산 목록</h5>
@@ -148,9 +136,9 @@ export default function Balance() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {exampleData.map((item, index) => (
+                                        {/* {exampleData.map((item, index) => (
                                             <tr key={index}>
-                                                <td>{item.asset}</td>
+                                                <td style={{textAlign: 'center'}}>{item.asset}</td>
                                                 <td>{item.quantity}</td>
                                                 <td>{item.averagePrice}</td>
                                                 <td>{item.purchaseAmount}</td>
@@ -158,7 +146,7 @@ export default function Balance() {
                                                 <td>{item.evaluationProfit}</td>
                                                 <td>&nbsp;</td>
                                             </tr>
-                                        ))}
+                                        ))} */}
                                     </tbody>
                                 </table>
                             </div>

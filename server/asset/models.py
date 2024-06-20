@@ -14,7 +14,7 @@ class Account(models.Model):
 class Member(models.Model):
     user_id = models.CharField(max_length=20)  # 회원 아이디
     pwd = models.CharField(max_length=30)  # 회원 비밀번호
-    account = models.ForeignKey(Account, related_name="members", on_delete=models.CASCADE)  # 계좌번호
+    account_num = models.ForeignKey(Account, related_name="members", on_delete=models.CASCADE)  # 계좌번호
 
     def __str__(self):
         return self.user_id
@@ -23,8 +23,8 @@ class Member(models.Model):
 class Position(models.Model):
     stock_code = models.IntegerField(default=0)  # 보유종목코드 
     stock_quantity = models.IntegerField(default=0)  # 보유수량
-    trade_price = models.IntegerField(default=0)  # 평균가격
-    account = models.ForeignKey(Account, related_name="positions", on_delete=models.CASCADE)  # 계좌번호
+    average_price = models.IntegerField(default=0)  # 평균가격
+    account_num = models.ForeignKey(Account, related_name="positions", on_delete=models.CASCADE)  # 계좌번호
 
     def __str__(self):
         return f"Account {self.account.account_num} - Stock {self.stock_code}"
@@ -34,9 +34,10 @@ class Trade(models.Model):
     stock_code = models.IntegerField(default=0)  # 종목코드
     buy_or_sell = models.CharField(max_length=10)  # 매수 or 매도
     trade_quantity = models.IntegerField(default=0)  # 매수, 매도 수량
-    trade_price = models.IntegerField(default=0)  # 매수, 매도 가격
+    trade_price = models.IntegerField(default=0)  # 매수, 매도 가격(단가)
+    order_price = models.IntegerField(default=0) # 주문총액(금액)
     trade_time = models.DateTimeField('date published', default=timezone.now)  # 거래일자
-    account = models.ForeignKey(Member, related_name="trades", on_delete=models.CASCADE)  # 계좌번호
+    account_num = models.ForeignKey(Member, related_name="trades", on_delete=models.CASCADE)  # 계좌번호
 
     def __str__(self):
         return f"{self.buy_or_sell} - {self.stock_code} - {self.trade_quantity}"

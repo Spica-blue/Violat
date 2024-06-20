@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './Sign_up.module.css';
+import styles from './SignUp.module.css';
 
 function SignUp() {
   const [id, setId] = useState('');

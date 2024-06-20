@@ -24,16 +24,24 @@ function Header() {
         <div className={styles.row}>거래소</div>
         <div className={styles.row}>입출금</div>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="../asset/Balance" title='투자내역'>
+          <NavLink className={styles.investment} to="../asset/balance" title='투자내역'>
             투자내역
           </NavLink>
         </div>
-        <div className={styles.row}>코인동향</div>
-        <div className={styles.row}>스테이킹</div>
+        <div className={styles.row}>
+          <NavLink className={styles.investment} to="../asset/rankings" title='순위'>
+            주식순위
+          </NavLink>
+        </div>
+        <div className={styles.row}>
+          <NavLink className={styles.investment} to="../asset/buy" title='트레이드'>
+            트레이드
+          </NavLink>
+        </div>
         <div className={styles.row}>NFT</div>
         <div className={styles.row}>고객센터</div>
       </div>
-      <div className='img' onClick={handleClickLogin}>
+      <div className={styles.img} onClick={handleClickLogin}>
         <img src={user} className={styles.userImg} alt='User' />
       </div>
     </div>

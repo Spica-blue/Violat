@@ -47,7 +47,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS 추가
-    'django.middleware.common.CommonMiddleware',  # CORS 추가
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,7 +58,7 @@ MIDDLEWARE = [
 
 # CORS 추가
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',  # 리액트 개발 서버
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'server.urls'
