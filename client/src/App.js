@@ -26,7 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element= {<Mainpage/>} />
           <Route path="/member/SignUp" element= {<SignUp/>} />
-          <Route path="/login" element= {<Login/>} />
+          <Route path="/member/login" element= {<Login/>} />
           <Route path='/asset/balance' element={<Balance/>}/>
           <Route path='/asset/income' element={<Income/>}/>
           <Route path='/asset/history' element={<History/>}/>

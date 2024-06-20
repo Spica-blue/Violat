@@ -22,7 +22,7 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-    // console.log("값:",values)
+    console.log("값:",values)
     e.preventDefault();
     try {
       const response = await axios.post(API_URL, values);
