@@ -10,8 +10,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.models import User
 
 # Django 설정 모듈을 환경 변수로 지정
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
@@ -43,13 +41,13 @@ def login(request):
     print("user : ", user, flush=True)
     if user:
         print("들어옴ㅁㅁㅁㅁㅁ", flush=True)
-        django_user, created = User.objects.get_or_create(username=input_id)
-        print("django_user:",django_user, flush=True)
-        print("created:",created, flush=True)
-        print("password:",django_user.check_password(input_pwd), flush=True)
-        if created or not django_user.check_password(input_pwd):
-            django_user.set_password(input_pwd)
-            django_user.save()
+        # django_user, created = User.objects.get_or_create(username=input_id)
+        # print("django_user:",django_user, flush=True)
+        # print("created:",created, flush=True)
+        # print("password:",django_user.check_password(input_pwd), flush=True)
+        # if created or not django_user.check_password(input_pwd):
+        #     django_user.set_password(input_pwd)
+        #     django_user.save()
         
         auth_user = authenticate(username=input_id, password=input_pwd)
         print("auth_user:",auth_user, flush=True)
@@ -57,30 +55,23 @@ def login(request):
             print("유저 들어옴",flush=True)
             auth_login(request, auth_user)
             print("auth_login:",auth_login,flush=True)
-            refresh = RefreshToken.for_user(auth_user)
             
-            print("refresh:",refresh,flush=True)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }, status=status.HTTP_200_OK)
+            # return Response({
+            #     'refresh': str(refresh),
+            #     'access': str(refresh.access_token),
+            # }, status=status.HTTP_200_OK)
+            return Response({'message': '로그인 성공'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': '로그인 실패. 다시 시도해주세요.'}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response({'message': '로그인 실패. 다시 시도해주세요.'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    
-@api_view(['POST'])
-def logout(request):
-    auth_logout(request)
-    return Response({'message': '로그아웃 성공'}, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def check_login_status(request):
-    print("유저이름:", request.user.username)
-    return JsonResponse({'is_logged_in': True, 'user_id': request.user.username})
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def check_login_status(request):
+#     print("유저이름:", request.user.username)
+#     return JsonResponse({'is_logged_in': True, 'user_id': request.user.username})
 
 
 @api_view(['POST'])
@@ -108,7 +99,7 @@ def signup(request):
     }
 
     collection.insert_one(new_user)
-    print("계좌 적용");
+    print("계좌 적용")
 
     return Response({
       'success': True,
@@ -144,16 +135,16 @@ def id_check(request):
         return Response({'error': 'Internal Server Error'}, status=500)
 
 
+# @permission_classes([IsAuthenticated]) #사용자 인증, 인증된 사용자
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated]) #사용자 인증, 인증된 사용자
 def deleteUser(request):
     print("back통과")
     try:
-        user = request.user
-        print("현재 id:", user.username, flush=True)
+        user_id = request.data.get('user_id')
+        print("현재 id:", user_id, flush=True)
 
         collection = db["member"]
-        collection.delete_one({'id': user.username})
+        collection.delete_one({'id': user_id})
         
         return Response({'message': '회원탈퇴 성공'}, status=status.HTTP_200_OK)
     except Exception as e:

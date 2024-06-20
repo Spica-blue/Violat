@@ -6,7 +6,6 @@ import styles from './Mypage.module.css';
 function Mypage() {
   const navigate = useNavigate();
   const DELETE_URL = 'http://127.0.0.1:8000/api/deleteUser/';
-  const CHECK_LOGIN_STATUS_URL = 'http://127.0.0.1:8000/api/check_login_status/';
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -19,17 +18,17 @@ function Mypage() {
 
   const clickedHandler = async () =>{
     try{
-      console.log("들어옴")
+      console.log("들어옴");
+      // const response = await axios.delete(DELETE_URL, {
+      //   headers: { Authorization: `Bearer ${window.sessionStorage.getItem('sessionid')}` }
+      // });
       const response = await axios.delete(DELETE_URL, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
-        //인증 토큰을 헤더에 포함시킨다. 헤더에 Authorization필드(서버에서 클라이언트 신원 확인) 추가, Bearer는 인증유형
+        data: { user_id: userId }
       });
-      console.log('회원탈퇴 성공:', response.data);
-      localStorage.removeItem('access_token'); //토큰 삭제
-      localStorage.removeItem('refresh_token');
-
-      alert('회원탈퇴가 되었습니다.')
-      setUserId(null)
+      console.log("탈퇴: ", response.data);
+      window.sessionStorage.clear();
+      alert('회원탈퇴가 되었습니다.');
+      setUserId(null);
       navigate('/');
       handleRefresh();
     } catch(error){
@@ -38,11 +37,14 @@ function Mypage() {
   };
 
   const checkLoginStatus = async () => {
-    const token = localStorage.getItem('access_token');
-    const response = await axios.get(CHECK_LOGIN_STATUS_URL, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setUserId(response.data.user_id);
+    try {
+      const sessionId = window.sessionStorage.getItem("sessionid");
+      if (sessionId) {
+        setUserId(sessionId);
+      } 
+    } catch (error) {
+      console.error('로그인 상태 확인 실패:', error);
+    }
   };
   
   return(
