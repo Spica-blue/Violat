@@ -4,7 +4,7 @@ import StockChart from "./StockChart";
 import TradeLog from "../asset/view/TradeLog";
 import styles from "./Stock.module.css";
 import Trade from "./Trade";
-import Sidebar from './Sidbar';
+import Sidebar from './Sidebar';
 
 function Stock() {
   const { stockName } = useParams(); // Get stockName from URL
