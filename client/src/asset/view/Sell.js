@@ -83,7 +83,6 @@ export default function Sell() {
     return (
         <>
             <article>
-                <TradeHeader/>
                 <form onSubmit={sellStock}>
                     <div className={styles.css_1trmusf}>
                         <div className={styles.css_ofkx68}>
