@@ -12,6 +12,8 @@ function Login() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const API_URL = 'http://127.0.0.1:8000/api/login/';
+  const sessionId = window.sessionStorage.getItem("sessionid");
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,23 +27,25 @@ function Login() {
     console.log("값:",values)
     e.preventDefault();
     try {
-      const response = await axios.post(API_URL, values,{
-        withCredentials:true, //session
-      });
-      console.log('로그인 성공:', response.data);
-      alert("로그인 성공");
-
-      setValues({ username: '', password: '' }); //리디렉트
-      setError(null);
-
-      navigate('/'); // 로그인 성공 시 메인 페이지로 이동
-
-      window.location.reload();
+      const response = await axios.post(API_URL, values);
+      console.log('로그인 성공:', response.data.message);
+      if(response.data.message === "로그인 성공"){
+        console.log("if문 들어옴");
+        alert("로그인 성공");
+        window.sessionStorage.setItem("sessionid", values.id)
+        setError(null);
+        navigate('/'); // 로그인 성공 시 메인 페이지로 이동
+        window.location.reload();
+      }
+      // sessionStorage.setItem("sessionid", )
+      // localStorage.setItem('access_token', response.data.access);
     } catch (error) {
       console.error('로그인 실패:', error.response ? error.response.data : error.message);
       setError('로그인 실패. 다시 시도해주세요.');
     }
   };
+
+  console.log("세션 확인!!!", sessionId);
 
   return (
     <div className={styles.APP}>

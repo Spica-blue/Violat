@@ -13,32 +13,23 @@ function Header() {
   // const LOGOUT_URL = 'http://127.0.0.1:8000/api/logout/';
   // const CHECK_LOGIN_STATUS_URL = 'http://127.0.0.1:8000/api/check_login_status/';
   const navigate = useNavigate();
-
-
-  // useEffect(() => {
-  //   checkLoginStatus();
-  // }, []);
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
 
   const checkLoginStatus = async () => {
-    // console.error('확인');
-    // try {
-    //   const token = localStorage.getItem('access_token');
-    //   console.log("토큰 :",token)
-    //   if (token) {
-    //     const response = await axios.get(CHECK_LOGIN_STATUS_URL, {
-    //       headers: { Authorization: `Bearer ${token}` },
-    //     });
-    //     // console.log("로그인결과:",response.data.is_logged_in)
-    //     if (response.data.is_logged_in) {
-    //       setIsLoggedIn(true);
-    //       setUserId(response.data.user_id);
-    //     } else {
-    //       setIsLoggedIn(false);
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error('로그인 상태 확인 실패:', error);
-    // }
+    try {
+      const sessionId = window.sessionStorage.getItem("sessionid");
+      if (sessionId) {
+          setIsLoggedIn(true);
+          setUserId(sessionId);
+      } 
+      else {
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.error('로그인 상태 확인 실패:', error);
+    }
   };
 
   useEffect(() => {
@@ -46,19 +37,14 @@ function Header() {
   }, []);
 
   const handleLogout = async () => {
-    // try {
-    //   const response = await axios.post(LOGOUT_URL, {}, {
-    //     headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
-    //   });
-    //   console.log('로그아웃 성공:', response.data);
-    //   localStorage.removeItem('access_token');
-    //   localStorage.removeItem('refresh_token');
-    //   alert("로그아웃 성공");
-    //   setIsLoggedIn(false); //로그인 상태 false로 변환
-    //   navigate('/member/Login');
-    // } catch (error) {
-    //   console.error('로그아웃 실패:', error.response ? error.response.data : error.message);
-    // }
+    try {
+      window.sessionStorage.clear();
+      alert("로그아웃 성공");
+      setIsLoggedIn(false); //로그인 상태 false로 변환
+      navigate('/member/Login');
+    } catch (error) {
+      console.error('로그아웃 실패:', error.response ? error.response.data : error.message);
+    }
   };
 
   const handleClickLogin = () => {
