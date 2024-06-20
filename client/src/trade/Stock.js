@@ -20,7 +20,7 @@ function Stock() {
         </Routes>
         <div className={styles.tradeLog}>
           <div className={styles.tradeLogSection}>
-            <span className={styles.span}>거래내역</span>
+            <span style={{fontSize:'22px',fontWeight:'bold'}}>거래내역</span>
             <TradeLog />
           </div>
           <div className={styles.tradeSection}>

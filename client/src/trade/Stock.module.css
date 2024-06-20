@@ -37,13 +37,9 @@
   padding: 20px;
   box-sizing: border-box;
   border-radius: 4px;
-  height: 50vh;
+  height: 60vh;
 }
 
 .tradeLogSection{
   text-align: center;
-}
-
-.span{
-  font-size: 16px;
 }
