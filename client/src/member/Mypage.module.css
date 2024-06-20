@@ -1,0 +1,67 @@
+.h1{
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+.h3{
+  font-size:20px;
+  font-weight: bolder;
+}
+
+.body {
+  background-image: url('https://wbstatic.webullfintech.com/v1/webull-us-g/assets/77ac67cea715a7e26a86e4c874064b15.webp');
+  height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  display: flex;
+  color: white;
+  justify-content: center;
+}
+
+.box1 {
+  width: 30%;
+  height: 60%;
+  margin-top: 40px;
+  background-color: white;
+  border-radius: 4px;
+  padding: 20px;
+  
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.userid{
+  margin-top: 2rem;
+  height: 40%;
+
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.id{
+  margin-top: 20px;
+}
+
+.hr{
+  width: 90%;
+  text-Align: center;
+  border-Bottom: 1px solid #aaa;
+  line-Height: 0.1em;
+  margin: 10px 0 20px;
+}
+
+.dropout{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.button{
+  margin-top: 20px;
+}

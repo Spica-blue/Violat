@@ -52,7 +52,7 @@ def stockspurchase_domestic(data):
         "price_change": format(int(pValue[4]), ',d'),  # 전일대비 형식화
         "trading_volume": format(trading_volume, ',d')  # 거래대금 형식화
     }
-    print(stock_data, flush=True)
+    print(stock_data)
     filter_data = stock_data
     return stock_data
 
@@ -78,7 +78,7 @@ def fetch_stock_price(stock_code):
         output = data.get('output', {})
         return int(output.get('stck_prpr', 0))
     except Exception as e:
-        print(f"Error fetching price for {stock_code}: {e}", flush=True)
+        print(f"Error fetching price for {stock_code}: {e}")
         return 0
 
 def fetch_stock_names_and_codes():
@@ -102,19 +102,19 @@ def fetch_stock_names_and_codes():
 
 def save_all_stocks_and_codes_to_json():
     stock_data = fetch_stock_names_and_codes()
-    print("모든 종목: ", stock_data, flush=True)
+    print("모든 종목: ", stock_data)
     stock_data = stock_data.fillna('')
 
     stock_data_list = stock_data.to_dict(orient='records')
 
     with open('all_stock_codes3.json', 'w', encoding='utf-8') as file:
         json.dump(stock_data_list, file, ensure_ascii=False, indent=4)
-    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.", flush=True)
+    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.")
 
 def load_stock_codes_from_json():
     with open('all_stock_codes3.json', 'r', encoding='utf-8') as file:
         stock_codes = json.load(file)
-        print("json 파일 읽기ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ", stock_codes , flush=True)
+        print("json 파일 읽기ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ", stock_codes)
     global stock_name_map
     stock_name_map = {stock['단축코드']: stock['한글명'] for stock in stock_codes}
     return stock_codes
@@ -133,7 +133,7 @@ def load_realtime_stock_data():
     if os.path.exists('realtime_stock_data.json'):
         with open('realtime_stock_data.json', 'r', encoding='utf-8') as file:
             all_stocks_data = json.load(file)
-        print("실시간 데이터 파일 읽기: ", all_stocks_data, flush=True)
+        print("실시간 데이터 파일 읽기: ", all_stocks_data)
 
 # 열 이름에 맞추어 종목명을 통해 종목코드를 조회하는 함수
 def get_stock_code_by_name(stock_name):
@@ -147,6 +147,7 @@ def get_stock_code_by_name(stock_name):
         return None
 
 def fetch_stock_info(stock_code, stock_name):
+    print("api에서 ")
     try:
         data = broker.fetch_price(stock_code)
         if 'output' not in data:
@@ -161,19 +162,43 @@ def fetch_stock_info(stock_code, stock_name):
         }
         return filtered_data
     except Exception as e:
-        print(f"Exception fetching data for {stock_name} ({stock_code}): {e}", flush=True)
+        print(f"Exception fetching data for {stock_name} ({stock_code}): {e}")
+        return None
+    
+def fetch_stock_daily_data(stock_code):
+    try:
+        data = broker.fetch_ohlcv(
+            symbol=stock_code,
+            timeframe='D',
+            adj_price=True
+        )
+        # 데이터를 출력해서 확인
+        # print("데이터 확인:", data)
+        df = pd.DataFrame(data['output2'])
+        dt = pd.to_datetime(df['stck_bsop_date'], format="%Y%m%d")
+        df.set_index(dt, inplace=True)
+        df = df[['stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']]
+        df.columns = ['open', 'high', 'low', 'close', 'volume']
+        df.index.name = "date"
+        df.reset_index(inplace=True)
+        df['date'] = df['date'].dt.strftime('%Y-%m-%d')
+        daily_data = df.to_dict(orient='records')
+        # print("일봉:",daily_data)
+        return daily_data
+    except Exception as e:
+        print(f"Exception fetching daily data for {stock_code}: {e}")
         return None
 
 # 웹 소켓에 접속
 async def connect():
-    print("웹 소켓 접속---------------------------------------", flush=True)
+    print("웹 소켓 접속---------------------------------------")
     g_appkey = 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl'
     g_appsceret = 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs='
 
     url = 'ws://ops.koreainvestment.com:31000'  
 
     g_approval_key = get_approval(g_appkey, g_appsceret)
-    print("approval_key [%s]" % (g_approval_key), flush=True)
+    print("approval_key [%s]" % (g_approval_key))
 
     stock_codes = load_stock_codes_from_json()
 
@@ -187,14 +212,14 @@ async def connect():
         for senddata in senddata_list:
             await websocket.send(json.dumps(senddata))
             await asyncio.sleep(0.5)
-            print(f"Input Command is :{senddata}", flush=True)
+            # print(f"Input Command is :{senddata}")
 
         while True:
             global filter_data, all_stocks_data
             data = await websocket.recv()
             try:
                 json_data = json.loads(data)
-                print(f"Received JSON data: {json_data}", flush=True)
+                # print(f"Received JSON data: {json_data}")
             except json.JSONDecodeError:
                 recvstr = data.split('|')
                 trid = recvstr[1]
@@ -204,7 +229,7 @@ async def connect():
                     filter_data = stockhoka_overseas_usa(recvstr[3])
                     print("if--------------", filter_data)
                 elif trid == "H0STCNT0":
-                    print("#### 국내주식 체결 ####", flush=True)
+                    print("#### 국내주식 체결 ####")
                     filter_data = stockspurchase_domestic(recvstr[3]) 
                     for stock in all_stocks_data:
                         if stock['stock_code'] == filter_data['stock_code']:
@@ -213,10 +238,10 @@ async def connect():
                     update_stock_data(filter_data)
                     with open('realtime_stock_data.json', 'w', encoding='utf-8') as file:
                         json.dump(all_stocks_data, file, ensure_ascii=False, indent=4)
-                    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.-----------------", flush=True)
+                    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.-----------------")
                     print("if--------------", filter_data)
                 else:
-                    print(f"Unknown real-time data: {data}", flush=True)
+                    print(f"Unknown real-time data: {data}")
 
 async def stock_price_handler(websocket, path):
     async for message in websocket:
@@ -241,7 +266,7 @@ def start_websocket_server():
 # 필터링된 데이터 가져오기
 def get_filter_data():
     global all_stocks_data
-    print("fiiiiiiiii", all_stocks_data, flush=True)
+    # print("fiiiiiiiii", all_stocks_data)
     return all_stocks_data
 
 # 저장 함수 실행

@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Sidebar.module.css'; // CSS 모듈 파일을 사용하여 스타일링
 import { Link } from 'react-router-dom';
@@ -28,14 +28,14 @@ function Sidebar() {
     if (stockInfo) {
       interval = setInterval(() => {
         getStockInfoByName(stockName);
-      }, 1500); // 1초마다 검색된 종목 데이터 가져오기
+      }, 1000); // 1초마다 검색된 종목 데이터 가져오기
     }
     return () => clearInterval(interval);
   }, [stockInfo, stockName]);
 
   const startWebsocketServer = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/start-websocket-server/');
+      const response = await axios.post('http://localhost:8000/trade/start-websocket-server/');
       console.log(response.data.message);
     } catch (error) {
       console.log("웹소켓 서버 시작 중 에러 발생:", error);
@@ -44,7 +44,7 @@ function Sidebar() {
 
   const connectToRealtimeData = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/connect-realtime-data/');
+      const response = await axios.post('http://localhost:8000/trade/connect-realtime-data/');
       console.log(response.data.message);
     } catch (error) {
       console.log("실시간 데이터 연결 중 에러 발생:", error);
@@ -53,7 +53,7 @@ function Sidebar() {
 
   const fetchAllStocks = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/stocks/');
+      const response = await axios.get('http://localhost:8000/trade/stocks/');
       console.log("fetchhhh : ", response.data)
       setAllStocks(response.data);
       // setStockInfo(null); // 전체 종목을 가져올 때 개별 종목 정보를 초기화
@@ -67,7 +67,7 @@ function Sidebar() {
   const fetchFilteredStockData = async () => {
     // console.log("fetchFilteredStockData 함수 호출됨"); // 함수 호출 확인
     try {
-      const response = await axios.get('http://localhost:8000/api/filtered-stock-data/');
+      const response = await axios.get('http://localhost:8000/trade/filtered-stock-data/');
       // console.log("API 응답: ", response.data); // 응답 데이터 확인
       const updatedStock = response.data;
       if (Array.isArray(updatedStock)) {
@@ -94,7 +94,7 @@ function Sidebar() {
 
   const getStockInfoByName = async (name) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/stock-info/', { stock_name: name });
+      const response = await axios.post('http://localhost:8000/trade/stock-info/', { stock_name: name });
       setStockInfo(response.data);
       setError2(null); // 에러 초기화
     } catch (error) {
@@ -182,7 +182,7 @@ function Sidebar() {
               </tr>
             ) : stockInfo ? (
               <tr>
-                <td><Link to="#">{stockInfo.stock_name}{console.log("검새ㅐㅐㅐㅐㅐㅐㄱ:",stockInfo)}</Link></td>
+                <td><Link to={`/trade/stock/${stockInfo.stock_name}`}>{stockInfo.stock_name}{console.log("검새ㅐㅐㅐㅐㅐㅐㄱ:",stockInfo)}</Link></td>
                 <td>{stockInfo.current_price}</td>
                 <td
                   style={{
@@ -197,7 +197,7 @@ function Sidebar() {
             ) : (
               allStocks.map((stock, index) => (
                 <tr key={index}>
-                  <td><Link to="#">{stock.stock_name}</Link></td> {/* 종목 코드 */}
+                  <td><Link to={`/trade/stock/${stock.stock_name}`}>{stock.stock_name}</Link></td> {/* 종목 코드 */}
                   <td>{stock.current_price}</td> {/* 현재가 */}
                   <td
                     style={{
