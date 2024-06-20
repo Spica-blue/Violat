@@ -37,6 +37,7 @@
 
 .investment:hover{
   font-weight: bolder;
+  cursor: pointer;
 }
 
 .userSection {
