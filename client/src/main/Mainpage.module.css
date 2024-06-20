@@ -4,7 +4,6 @@
   font-weight: 600;
   margin-top: 10px;
 }
-
 .h3{
   font-size: 1rem;
 }
@@ -15,7 +14,6 @@
   height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
-  
 }
 
 .title {
@@ -32,5 +30,4 @@
   padding: 20px;
   margin: 20px;
   height: 75%;
-  right: 0;
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './SignUp.module.css';
+import axios from 'axios';
 
 function SignUp() {
   const [id, setId] = useState('');
@@ -8,13 +9,15 @@ function SignUp() {
   const [idError, setIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmError, setConfirmError] = useState('');
-  const [isIdCheck, setIsIdCheck] = useState(false); 
+  const [isIdCheck, setIsIdCheck] = useState(false);
   const [isIdAvailable, setIsIdAvailable] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   const onChangeIdHandler = (e) => {
     const idValue = e.target.value;
     setId(idValue);
+    // console.log("id:",idValue)
     idCheckHandler(idValue);
   }
 
@@ -30,29 +33,39 @@ function SignUp() {
   }
 
   const idCheckHandler = async (id) => {
-    const idRegex = /^[a-z\d]{5,10}$/;
+    const idRegex = /^[a-z\d!@*&-_]{5,16}$/;
+    // console.log("id체크:",idRegex.test(id));
     if (id === '') {
       setIdError('아이디를 입력해주세요.');
       setIsIdAvailable(false);
       return false;
-    } else if (!idRegex.test(id)) {
-      setIdError('아이디는 5~10자의 영소문자, 숫자만 입력 가능합니다.');
-      setIsIdAvailable(false);
-      return false;
     }
     try {
-      const responseData = await idDuplicateCheck(id); 
-      if (responseData) {
-        setIdError('사용 가능한 아이디입니다.');
-        setIsIdCheck(true);
-        setIsIdAvailable(true);
-        return true;
-      } else {
+      // console.log("들어옴")
+      const response = await axios.post('http://127.0.0.1:8000/api/id_check/', { id });
+      // console.log("response:",response.data.exists)
+      if (response.data.exists) {
         setIdError('이미 사용중인 아이디입니다.');
+        setIsIdCheck(false);
         setIsIdAvailable(false);
         return false;
+      } else {
+        // console.log("확인:",idRegex.test(id))
+        if (!idRegex.test(id)){
+          setIdError('아이디는 5~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
+          setIsIdCheck(false);
+          setIsIdAvailable(false);
+          return false;
+        }
+        else if(idRegex.test(id)){
+          setIdError('사용 가능한 아이디입니다.');
+          setIsIdCheck(true);
+          setIsIdAvailable(true);
+          return true;
+        }
       }
     } catch (error) {
+      console.log("fail")
       alert('서버 오류입니다. 관리자에게 문의하세요.');
       console.error(error);
       return false;
@@ -82,24 +95,27 @@ function SignUp() {
     e.preventDefault();
 
     const idCheckResult = await idCheckHandler(id);
-    if (idCheckResult) setIdError('');
-    else return;
-    if (!isIdCheck || !isIdAvailable) {
+    if (!idCheckResult) {
       alert('아이디 중복 검사를 해주세요.');
       return;
     }
 
     const passwordCheckResult = passwordCheckHandler(password, confirm);
-    if (passwordCheckResult) { setPasswordError(''); setConfirmError(''); }
-    else return;
+    if (!passwordCheckResult) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    
 
     try {
-      const responseData = await signup(id, password, confirm); 
-      if (responseData) {
+      const response = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password, confirm });
+      if (response.data.success) {
         localStorage.setItem('loginId', id);
-        setOpenModal(true);
+        alert('회원가입이 완료되었습니다')
+        navigate('/member/login');
       } else {
-        alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+        alert(response.data.message || '회원가입에 실패하였습니다. 다시 시도해주세요.');
       }
     } catch (error) {
       alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
@@ -109,12 +125,11 @@ function SignUp() {
 
   return (
     <>
-      <div className={styles.header}>회원가입</div>
       <div className={styles.wrapper}>
         <form onSubmit={signupHandler} className={styles.form}>
+          <div className={styles.h2}>회원가입</div> <br/>
           <div className={styles.inputWrapper}>
             <div className={styles.inputContainer}>
-              <label htmlFor='id'>아이디</label>
               <input
                 onChange={onChangeIdHandler}
                 type="text"
@@ -128,7 +143,6 @@ function SignUp() {
               {idError && <small className={isIdAvailable ? styles.idAvailable : styles.error}>{idError}</small>}
             </div>
             <div className={styles.inputContainer}>
-              <label htmlFor='password'>비밀번호</label>
               <input
                 onChange={onChangePasswordHandler}
                 type="password"
@@ -157,22 +171,10 @@ function SignUp() {
             <button type='submit' className={styles.button}>Sign Up</button>
           </div>
         </form>
-        {openModal && <div className={styles.modal}>회원가입이 완료되었습니다!</div>}
+        {/* {openModal && <div className={styles.modal}>회원가입 완료</div>} */}
       </div>
     </>
   );
-}
-
-async function idDuplicateCheck(id) {
-  // 여기서 서버에 ID 중복 체크 요청을 보내야 합니다.
-  // 이 예제에서는 항상 false를 반환하도록 하겠습니다.
-  return false;
-}
-
-async function signup(id, password, confirm) {
-  // 여기서 서버에 회원가입 요청을 보내야 합니다.
-  // 이 예제에서는 항상 true를 반환하도록 하겠습니다.
-  return true;
 }
 
 export default SignUp;
