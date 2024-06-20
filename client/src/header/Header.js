@@ -62,7 +62,23 @@ function Header() {
       navigate('/member/Login')
     )}
   
-    
+  const handleClickBalance = () => {
+    if (isLoggedIn) {
+      navigate('/asset/balance');
+    } else {
+      alert("로그인시 이용가능합니다.");
+      navigate('/member/Login');
+    }
+  }
+
+  const handleClickAccount = () => {
+    if (isLoggedIn) {
+      navigate('/');
+    } else {
+      alert("로그인시 이용가능합니다.");
+      navigate('/member/Login');
+    }
+  }
 
   return (
     <div className={styles.header}>
@@ -73,14 +89,14 @@ function Header() {
       </div>
       <div className={styles.list}>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="#" title='가상계좌개설'>
+          <div onClick={handleClickBalance} className={styles.investment} title='가상계좌개설'>
             가상계좌개설
-          </NavLink>
+          </div>
         </div>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="../asset/balance" title='투자내역'>
+          <div onClick={handleClickBalance} className={styles.investment} title='투자내역'>
             투자내역
-          </NavLink>
+          </div>
         </div>
         <div className={styles.row}>
           <NavLink className={styles.investment} to="../asset/rankings" title='순위'>
