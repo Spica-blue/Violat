@@ -29,15 +29,18 @@ db = client["violat"]
 def login(request):
     input_id = request.data.get('id') #Login.js const values(id, password)
     input_pwd = request.data.get('password')
+    account = request.data.get('account')
     
     print("inputid : ", input_id, flush=True)
     print("inputpwd : ", input_pwd, flush=True)
+    print("111111111111111111")
+    print("account : ", account, flush=True)
     
     if not input_id or not input_pwd:
         return Response({'message': 'ID와 비밀번호를 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     
     collection = db["member"]
-    user = collection.find_one({'id': input_id, 'pwd': input_pwd}, {'_id': 0, 'id': 1, 'pwd': 1})
+    user = collection.find_one({'id': input_id, 'pwd': input_pwd, 'account': account}, {'_id': 0, 'id': 1, 'pwd': 1, 'account': 1})
     print("user : ", user, flush=True)
     if user:
         print("들어옴ㅁㅁㅁㅁㅁ", flush=True)

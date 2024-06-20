@@ -7,6 +7,7 @@ function Mypage() {
   const navigate = useNavigate();
   const DELETE_URL = 'http://127.0.0.1:8000/api/deleteUser/';
   const [userId, setUserId] = useState(null);
+  const [account, setAccount] = useState(null);
 
   useEffect(() => {
     checkLoginStatus();
@@ -38,9 +39,13 @@ function Mypage() {
 
   const checkLoginStatus = async () => {
     try {
+      console("마이페이지1테스트")
       const sessionId = window.sessionStorage.getItem("sessionid");
+      const sessionAccount = window.sessionStorage.getItem("sessionaccount");
       if (sessionId) {
         setUserId(sessionId);
+        setAccount(sessionAccount);
+        console("마이페이지account확인",sessionAccount)
       } 
     } catch (error) {
       console.error('로그인 상태 확인 실패:', error);
@@ -58,6 +63,10 @@ function Mypage() {
             <div className={styles.h3}>사용자 ID</div>
             <div className={styles.id}>
               {userId}
+            </div>
+            <div className={styles.h3}>사용자 계좌번호</div>
+            <div className={styles.account}>
+              {account}
             </div>
           </div>
           <div className={styles.hr}/>
