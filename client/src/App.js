@@ -1,7 +1,8 @@
 // App.js
 
 import Login from "./member/Login";
-import Sign_up from "./member/Sign_up";
+import SignUp from "./member/SignUp";
+import Mypage from "./member/Mypage";
 import Mainpage from './main/Mainpage';
 import { BrowserRouter, Link, Route, Routes} from "react-router-dom";
 
@@ -25,12 +26,13 @@ function App() {
         <Link to={"/asset/rankings"}>Rankings</Link>
         <Routes>
           <Route path="/" element= {<Mainpage/>} />
-          <Route path="/member/Sign_up" element= {<Sign_up/>} />
-          <Route path="/login" element= {<Login/>} />
+          <Route path="/member/SignUp" element= {<SignUp/>} />
+          <Route path="/member/login" element= {<Login/>} />
           <Route path='/asset/balance' element={<Balance/>}/>
           <Route path='/asset/income' element={<Income/>}/>
           <Route path='/asset/history' element={<History/>}/>
           <Route path='/asset/rankings' element={<Rankings/>}/>
+          <Route path="/member/Mypage" element= {<Mypage/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>

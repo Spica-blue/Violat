@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-qs47)j0ap986zolh0!o=xq9wce784ij6!lv5ei1z-@i8&-^h1^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -37,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'member',
 ]
 
 MIDDLEWARE = [
@@ -54,9 +57,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS 추가
+
+CORS_ORIGIN_ALLOW_ALL = True #모든 도메인 허용
+CORS_ALLOW_CREDENTIALS = True
+# ---------------------
+
+
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',  # 리액트 개발 서버
+    'http://localhost:3000',  # React 앱 도메인
 ]
 
 ROOT_URLCONF = 'server.urls'
@@ -78,6 +86,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'server.wsgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+}
 
 
 # Database

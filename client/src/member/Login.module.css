@@ -17,7 +17,7 @@
   width: 400px;
   padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 10px;  
   background-color: #f9f9f9;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .input {
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 5px;
@@ -46,7 +46,8 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  width: 50%;
+  width: 200px;
+  margin: auto;
 }
 
 .button:hover {
@@ -65,12 +66,12 @@
 
 .userBox {
   color: white;
-  margin-top: 200px;
+  /* margin-top: 200px; */
 }
 
 .userData {
-  margin: 20px;
-  padding: 20px;
+  /* margin: 20px; */
+  /* padding: 20px; */
   border: 1px solid #ccc;
   border-radius: 10px;
   color: white;

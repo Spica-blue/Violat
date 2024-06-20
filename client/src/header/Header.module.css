@@ -5,11 +5,19 @@
   color: white;
 }
 
+.logoImg{
+  position: absolute;
+  width: 3.5rem;
+  top: 0;
+  margin-top: 5px;
+  margin-left: 1rem;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgb(25, 0, 255);
+  background-color: #CFD0D4;
   height: 4rem;
   color: black;
   /* padding: 0 1rem; */
@@ -21,23 +29,44 @@
   align-items: center;
 }
 
-.row{ /* ------ */
+.row{
   font-size: 20px;
-  margin: 0 40px 0 40px;
-  color: white;
+  margin: 0 40px
+}
+
+
+.investment:hover{
+  font-weight: bolder;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  width: 200px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  background-color: skyblue;
+  border: 2px solid black;
+  border-radius: 3px;
+}
+
+.stateLogin {
+  font-size: large;
+  margin-left: 20px;
+  color: blue;
+  margin-right: 20px;
 }
 
 .userImg { 
+  position: absolute;
+  top: 0;
+  right: 20px;
   width: 4rem;
-  margin-left: auto;
-  margin-right: 10px;
-  background-color: rgb(153, 153, 153);
-}
-
-.investment{
-  color: white;
-}
-
-.investment:hover{
-  color: rgb(0, 157, 255);
+  /* background-color: rgb(153, 153, 153); */
 }
