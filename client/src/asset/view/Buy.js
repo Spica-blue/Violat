@@ -2,7 +2,7 @@ import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-export default function Buy() {
+export default function Buy({ onTradeComplete }) {
     const { stockName } = useParams(); // useParams 훅으로 URL에서 stockName을 가져옴
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -80,6 +80,7 @@ export default function Buy() {
             console.log("매수 요청 성공:", data);
             setIsLoading(false);
             setAvailableBalance(prevBalance => prevBalance - totalAmount);
+            onTradeComplete(); // 매수 후 상위 컴포넌트에 알림
         })
         .catch(error => {
             console.error("매수 요청 실패:", error);
