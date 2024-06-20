@@ -1,285 +1,281 @@
-import requests
+import websockets
 import json
+import requests
+import asyncio
+from datetime import datetime
+import pandas as pd
+from mojito import KoreaInvestment
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+from base64 import b64decode
+import os
 
-app_key = "PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl"
+# AES256 DECODE
+def aes_cbc_base64_dec(key, iv, cipher_text):
+    cipher = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
+    return bytes.decode(unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size))
 
-app_secret = "Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs="
+# 웹소켓 접속키 발급
+def get_approval(key, secret):
+    url = 'https://openapivts.koreainvestment.com:29443'
+    headers = {"content-type": "application/json"}
+    body = {"grant_type": "client_credentials",
+            "appkey": key,
+            "secretkey": secret}
+    PATH = "oauth2/Approval"
+    URL = f"{url}/{PATH}"
+    res = requests.post(URL, headers=headers, data=json.dumps(body), verify=False)
+    approval_key = res.json().get("approval_key")
+    return approval_key
 
-token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6ImQ5ZGFiZjM3LTVkNDYtNDAyYS04NWU0LTlmNGZkNjMyMWRjNyIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODQ0MTE3MiwiaWF0IjoxNzE4MzU0NzcyLCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.WXOR_RCwbHo6eexpy7KFx-KPrOmmvRjrWz96ksaKpWCOetEKUzWdhR5mr_LF9nD0h79naWimwPrKoqeUH3Qm8w"
+# 해외주식(미국)호가 출력라이브러리
+def stockhoka_overseas_usa(data):
+    recvvalue = data.split('^')
+    stock_data = {
+        "stock_code": recvvalue[1],
+        "current_price": recvvalue[11],
+        "price_change": recvvalue[13],
+        "trading_volume": recvvalue[7]
+    }
+    print(stock_data)
+    return stock_data
 
+# 국내주식체결처리 출력라이브러리
+def stockspurchase_domestic(data):
+    global filter_data
+    pValue = data.split('^')
+    trading_volume = int(float(pValue[14]) / 1_000_000)  # 거래대금을 백만 단위로 변환
+    stock_data = {
+        "stock_code": pValue[0],
+        "stock_name": stock_name_map.get(pValue[0], "Unknown"),  # 한글명 추가
+        "current_price": format(int(pValue[2]), ',d'),  # 현재가 형식화
+        "price_change": format(int(pValue[4]), ',d'),  # 전일대비 형식화
+        "trading_volume": format(trading_volume, ',d')  # 거래대금 형식화
+    }
+    print(stock_data)
+    filter_data = stock_data
+    return stock_data
 
-# 1-1 주식주문(현금)
-def get1_1(id):
-  url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/trading/order-cash"
+# 모의 투자 환경에서 한국투자증권 API를 사용하여 브로커 객체를 생성합니다.
+key = "PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl"
+secret = "Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs="
+acc_no = "50111987-01"
 
-  payload = json.dumps({
-    "CANO": "50111987",
-    "ACNT_PRDT_CD": "01",
-    "PDNO": f"{id}",
-    "ORD_DVSN": "00",
-    "ORD_QTY": "1",
-    "ORD_UNPR": "55000"
-  })
-  headers = {
-    'content-type': 'application/json',
-    'authorization': f'Bearer {token}',
-    'appkey': app_key,
-    'appsecret': app_secret,
-    'tr_id': 'VTTC0802U'
-  }
+broker = KoreaInvestment(
+    api_key=key,
+    api_secret=secret,
+    acc_no=acc_no,
+    mock=True
+)
 
-  response = requests.request("POST", url, headers=headers, data=payload)
-  return response.json()
+filter_data = {}
+all_stocks_data = []
+stock_name_map = {}
 
-#1-2 주식잔고조회
-def get1_2(id):
+def fetch_stock_price(stock_code):
+    try:
+        data = broker.fetch_price(stock_code)
+        output = data.get('output', {})
+        return int(output.get('stck_prpr', 0))
+    except Exception as e:
+        print(f"Error fetching price for {stock_code}: {e}")
+        return 0
 
-  url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/trading/inquire-balance?CANO=50111987&ACNT_PRDT_CD=01&AFHR_FLPR_YN=N&OFL_YN=&INQR_DVSN=01&UNPR_DVSN=01&FUND_STTL_ICLD_YN=N&FNCG_AMT_AUTO_RDPT_YN=N&PRCS_DVSN=00&CTX_AREA_FK100=&CTX_AREA_NK100="
-
-  payload = ""
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'VTTC8434R'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-#1-3 매수가능조회
-def get1_3(id):
-  
-  url = f"https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/trading/inquire-psbl-order?CANO=50111987&ACNT_PRDT_CD=01&PDNO={id}&ORD_UNPR=55000&ORD_DVSN=01&OVRS_ICLD_YN=N&CMA_EVLU_AMT_ICLD_YN=N"
-
-  payload = ""
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'VTTC8908R'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-#1-4 투자계좌자산현황조회 //실전투자
-#1-5 매도가능수량조회 //실전투자
-
-
-# 2-1 주식 현재가 시세
-def get2_1(id):
-  
-  url = f'https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-price?fid_cond_mrkt_div_code=J&fid_input_iscd={id}'
-
-  payload = ""
-  headers = {
-      'content-type': 'application/json',
-      'authorization': f'Bearer {token}',
-      'appkey': app_key,
-      'appsecret': app_secret,
-      'tr_id': 'FHKST01010100'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-#2-2 주식현재가 체결(최근30건)
-def get2_2(id):
-  url = f"https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-ccnl?fid_cond_mrkt_div_code=J&fid_input_iscd={id}"
-
-  payload = {}
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'FHKST01010300'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-
-
-#2-3 주식현재가 일자별
-def get2_3(id):
-
-  url = f"https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-daily-price?fid_cond_mrkt_div_code=J&fid_input_iscd={id}&fid_period_div_code=D&fid_org_adj_prc=1"
-
-  payload = {}
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'FHKST01010400'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-#2-4 주식현재가 호가/예상체결
-def get2_4(id):
-
-  url = f"https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn?fid_cond_mrkt_div_code=J&fid_input_iscd={id}"
-
-  payload = {}
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'FHKST01010200'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-#2-5 주식현재가 투자자
-def get2_5(id):
-
-  url = f"https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-investor?fid_cond_mrkt_div_code=J&fid_input_iscd={id}"
-
-  payload = {}
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'FHKST01010900'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-#2-6 주식현재가 회원사
-def get2_6(id):
-
-  url = f"https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-member?fid_cond_mrkt_div_code=J&fid_input_iscd={id}"
-
-  payload = {}
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'FHKST01010600'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-
-#2-7 주식당일분봉조회
-def get2_7(id):
-  
-  url = f"https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-time-itemchartprice?FID_ETC_CLS_CODE=&FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD={id}&FID_INPUT_HOUR_1=092800&FID_PW_DATA_INCU_YN=Y"
-
-  payload = ""
-  headers = {
-    'content-type': 'application/json',
-    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6IjExZDEyYWEwLWU5NGItNDRkMi1iYmI1LTdlNWNjNjdmYTYyMSIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxODI3MTAwOCwiaWF0IjoxNzE4MTg0NjA4LCJqdGkiOiJQU0VQQVJuNEVoZmExTk9Fem9STUExQTNacHJ1STk5T3RPd2wifQ.aK_25cCwSijOKZ1JbBJsGENVA0MlIKFUES7NoPcZDPCTBAjAO13obD9G_ZmiF11NP5yFu3r3xivwjStNrVz1vw',
-    'appkey': 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl',
-    'appsecret': 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs=',
-    'tr_id': 'FHKST03010200'
-  }
-
-  response = requests.request("GET", url, headers=headers, data=payload)
-  return response.json()
-
-#3-1 주식기본조회 //실전투자
-#3-2 국내주식 대차대조표 //실전투자
-#3-3 국내주식 손익계산서 //실전투자
-#3-4 국내주식 재무비율 //실전투자
-#3-5 국내주식 수익성비율 //실전투자
-#3-6 국내주식 안정성비율 //실전투자
-#3-7 국내주식 성장성비율 //실전투자
-
-#4-1 국내기관_외국인 매매종목가집계 //실전투자
-#4-2 종목별일별매수매도체결량 //실전투자
-#4-3 시장별 투자자매매동향(시세) //실전투자
-
-#5-1 거래량순위 //
-#5-2 국내주식 등락률 순위 //
-#5-3 국내주식 시가총액 상위 //
-#5-4 국내주식 재무비율 순위 //
-
-#6-1 국내주식 실시간체결가 //
-#6-2 국내주식 실시간호가 //
-#6-3 국내주식 실시간체결통보 //
-
-#005930 삼성
-  
-  
-
-
-def test():
-  while(True):
-    print("\n//////////////////////////////")
-    print("1.[주문/계좌]")
-    print("1-1. 주식주문(현금)")
-    print("1-2. 주식잔고조회")
-    print("1-3. 매수가능조회")
-    print("//1-4. 투자계좌자산현황조회")
-    print("//1-5. 매도가능수량조회\n")
-
-    print("2.[기본시세]")
-    print("2-1. 주식현재가 시세")
-    print("2-2. 주식현재가 체결")
-    print("2-3. 주식현재가 일자별")
-    print("2-4. 주식현재가 호가/예상체결")
-    print("2-5. 주식현재가 투자자")
-    print("2-6. 주식현재가 회원사")
-    print("2-7. 주식당일분봉조회\n")
-
-    print("//3.[종목정보]")
-    print("//3-1. 주식기본조회")
-    print("//3-2. 국내주식 대차대조표")
-    print("//3-3. 국내주식 손익계산서")
-    print("//3-4. 국내주식 재무비율")
-    print("//3-5. 국내주식 수익성비율")
-    print("//3-6. 국내주식 안정성비율")
-    print("//3-7. 국내주식 성장성비율\n")
-
-    print("//4.[시세분석]")
-    print("//4-1. 국내기관_외국인 매매종목가집계")
-    print("//4-2. 종목별일별매수매도체결량")
-    print("//4-3. 시장별 투자자매매동향(시세)\n")
-
-    print("//5.[순위분석]")
-    print("//5-1. 거래량순위")
-    print("//5-2. 국내주식 등락률 순위")
-    print("//5-3. 국내주식 시가총액 상위")
-    print("//5-4. 국내주식 재무비율 순위\n")
-
-    print("//6.[실시간시세]")
-    print("//6-1. 국내주식 실시간체결가")
-    print("//6-2. 국내주식 실시간호가")
-    print("//6-3. 국내주식 실시간체결통보\n")
-
-    # 함수 호출 예시
-    select = input("(나가려면 exit) 확인할 부분 ex)2_1: ")
-    func_name = 'get' + select
-    if(select == 'exit'):
-      break
+def fetch_stock_names_and_codes():
+    # 코스피 종목 가져오기
+    kospi_symbols = broker.fetch_kospi_symbols().head(100)
+    kospi_symbols['현재가'] = kospi_symbols['단축코드'].apply(fetch_stock_price)
+    kospi_symbols = kospi_symbols.sort_values(by='현재가', ascending=False).head(30)
     
-    print("\n[주식 번호]")
-    print("삼성전자: 005930")
-    print("시노펙스: 025320")
-    print("HLB: 028300")
-    print("하이드로리튬: 101670\n")
+    # 코스닥 종목 가져오기
+    kosdaq_symbols = broker.fetch_kosdaq_symbols().head(100)
+    kosdaq_symbols['현재가'] = kosdaq_symbols['단축코드'].apply(fetch_stock_price)
+    kosdaq_symbols = kosdaq_symbols.sort_values(by='현재가', ascending=False).head(30)
     
-    num = input("주식번호: ")
-    res = globals()[func_name](num)
+    # 코스피와 코스닥 종목 합치기
+    all_symbols = pd.concat([kospi_symbols, kosdaq_symbols], ignore_index=True)
     
-    # JSON 데이터를 보기 좋게 정렬하여 파일에 저장
-    with open('test.json', 'w', encoding='utf-8') as outfile:
-        json.dump(res, outfile, indent=4, ensure_ascii=False)
-    # JSON 데이터를 콘솔에 보기 좋게 출력
-    print(json.dumps(res, indent=4, ensure_ascii=False))
+    # 필요한 열만 선택
+    stock_data = all_symbols[['한글명', '단축코드']]
+    
+    return stock_data
 
-if __name__ == "__main__":
-  test()
+def save_all_stocks_and_codes_to_json():
+    stock_data = fetch_stock_names_and_codes()
+    print("모든 종목: ", stock_data)
+    stock_data = stock_data.fillna('')
+
+    stock_data_list = stock_data.to_dict(orient='records')
+
+    with open('all_stock_codes3.json', 'w', encoding='utf-8') as file:
+        json.dump(stock_data_list, file, ensure_ascii=False, indent=4)
+    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.")
+
+def load_stock_codes_from_json():
+    with open('all_stock_codes3.json', 'r', encoding='utf-8') as file:
+        stock_codes = json.load(file)
+        print("json 파일 읽기ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ", stock_codes)
+    global stock_name_map
+    stock_name_map = {stock['단축코드']: stock['한글명'] for stock in stock_codes}
+    return stock_codes
+
+def update_stock_data(new_data):
+    global all_stocks_data
+    for i, stock in enumerate(all_stocks_data):
+        if stock['stock_code'] == new_data['stock_code']:
+            all_stocks_data[i] = new_data
+            break
+    else:
+        all_stocks_data.append(new_data)
+        
+def load_realtime_stock_data():
+    global all_stocks_data
+    if os.path.exists('realtime_stock_data.json'):
+        with open('realtime_stock_data.json', 'r', encoding='utf-8') as file:
+            all_stocks_data = json.load(file)
+        print("실시간 데이터 파일 읽기: ", all_stocks_data)
+
+# 열 이름에 맞추어 종목명을 통해 종목코드를 조회하는 함수
+def get_stock_code_by_name(stock_name):
+    kospi_symbols = broker.fetch_kospi_symbols()
+    kosdaq_symbols = broker.fetch_kosdaq_symbols()
+    all_symbols = pd.concat([kospi_symbols, kosdaq_symbols], ignore_index=True)
+    stock_code = all_symbols.loc[all_symbols['한글명'] == stock_name, '단축코드']
+    if not stock_code.empty:
+        return stock_code.values[0]
+    else:
+        return None
+
+def fetch_stock_info(stock_code, stock_name):
+    print("api에서 ")
+    try:
+        data = broker.fetch_price(stock_code)
+        if 'output' not in data:
+            return None
+        output = data['output']
+        trading_volume = int(float(output.get('acml_tr_pbmn', 0)) / 1_000_000)
+        filtered_data = {
+            'stock_name': stock_name,
+            'current_price': format(int(output.get('stck_prpr', 0)), ',d'),
+            'price_change': format(int(output.get('prdy_vrss', 0)), ',d'),
+            'trading_volume': format(trading_volume, ',d')
+        }
+        return filtered_data
+    except Exception as e:
+        print(f"Exception fetching data for {stock_name} ({stock_code}): {e}")
+        return None
+    
+def fetch_stock_daily_data(stock_code):
+    try:
+        data = broker.fetch_ohlcv(
+            symbol=stock_code,
+            timeframe='D',
+            adj_price=True
+        )
+        # 데이터를 출력해서 확인
+        # print("데이터 확인:", data)
+        df = pd.DataFrame(data['output2'])
+        dt = pd.to_datetime(df['stck_bsop_date'], format="%Y%m%d")
+        df.set_index(dt, inplace=True)
+        df = df[['stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']]
+        df.columns = ['open', 'high', 'low', 'close', 'volume']
+        df.index.name = "date"
+        df.reset_index(inplace=True)
+        df['date'] = df['date'].dt.strftime('%Y-%m-%d')
+        daily_data = df.to_dict(orient='records')
+        # print("일봉:",daily_data)
+        return daily_data
+    except Exception as e:
+        print(f"Exception fetching daily data for {stock_code}: {e}")
+        return None
+
+# 웹 소켓에 접속
+async def connect():
+    print("웹 소켓 접속---------------------------------------")
+    g_appkey = 'PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl'
+    g_appsceret = 'Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs='
+
+    url = 'ws://ops.koreainvestment.com:31000'  
+
+    g_approval_key = get_approval(g_appkey, g_appsceret)
+    print("approval_key [%s]" % (g_approval_key))
+
+    stock_codes = load_stock_codes_from_json()
+
+    async with websockets.connect(url, ping_interval=None) as websocket:
+        senddata_list = [
+            {"header": {"approval_key": g_approval_key, "custtype": "P", "tr_type": "1", "content-type": "utf-8"},
+             "body": {"input": {"tr_id": "H0STCNT0", "tr_key": stock['단축코드']}}}
+            for stock in stock_codes
+        ]
+
+        for senddata in senddata_list:
+            await websocket.send(json.dumps(senddata))
+            await asyncio.sleep(0.5)
+            # print(f"Input Command is :{senddata}")
+
+        while True:
+            global filter_data, all_stocks_data
+            data = await websocket.recv()
+            try:
+                json_data = json.loads(data)
+                # print(f"Received JSON data: {json_data}")
+            except json.JSONDecodeError:
+                recvstr = data.split('|')
+                trid = recvstr[1]
+
+                if trid == "HDFSASP0":
+                    print("#### 해외주식 호가 ####")
+                    filter_data = stockhoka_overseas_usa(recvstr[3])
+                    print("if--------------", filter_data)
+                elif trid == "H0STCNT0":
+                    print("#### 국내주식 체결 ####")
+                    filter_data = stockspurchase_domestic(recvstr[3]) 
+                    for stock in all_stocks_data:
+                        if stock['stock_code'] == filter_data['stock_code']:
+                            filter_data['stock_name'] = stock['stock_name']
+                            break   
+                    update_stock_data(filter_data)
+                    with open('realtime_stock_data.json', 'w', encoding='utf-8') as file:
+                        json.dump(all_stocks_data, file, ensure_ascii=False, indent=4)
+                    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.-----------------")
+                    print("if--------------", filter_data)
+                else:
+                    print(f"Unknown real-time data: {data}")
+
+async def stock_price_handler(websocket, path):
+    async for message in websocket:
+        stock_code = message  # 클라이언트로부터 종목 코드를 수신합니다.
+        stock_name = stock_name_map.get(stock_code, "Unknown")  # 종목 코드에 대한 한글명을 가져옵니다.
+        async for price in broker.stream_price(stock_code):
+            filtered_price = {
+                "stock_code": price["stock_code"],
+                "stock_name": stock_name,  # 한글명 추가
+                "current_price": price["trade_price"],
+                "price_change": price["change_price"],
+                "trading_volume": price["accumulated_trade_volume"]
+            }
+            await websocket.send(json.dumps(filtered_price))
+
+# 웹소켓 서버 시작
+def start_websocket_server():
+    start_server = websockets.serve(stock_price_handler, "localhost", 8002)  # 포트 변경
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+    
+# 필터링된 데이터 가져오기
+def get_filter_data():
+    global all_stocks_data
+    # print("fiiiiiiiii", all_stocks_data)
+    return all_stocks_data
+
+# 저장 함수 실행
+# save_all_stocks_and_codes_to_json()
+# load_realtime_stock_data()
+
+# 저장 함수 실행
+# save_all_stocks_and_codes_to_json()
+
+# # 비동기로 서버에 접속한다.
+# asyncio.get_event_loop().run_until_complete(connect())
+# asyncio.get_event_loop().close()

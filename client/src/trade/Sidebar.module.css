@@ -1,0 +1,196 @@
+/* 기본 스크롤바 숨기기 */
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.tableContainer::-webkit-scrollbar{
+  display: none;
+}
+
+.sidebar {
+  height: 100vh;
+  width: 500px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  overflow-y: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  overflow: hidden; /* 기본 스크롤바 완전히 비활성화 */
+}
+
+.searchContainer {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 1000;
+  /* padding: 10px; */
+  border-bottom: 1px solid rgb(213, 214, 220);
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.search input {
+  /* padding: 5px; */
+  margin-right: 10px;
+  border-radius: 4px;
+  border: none;
+  width: 304px;
+  height: 26px;
+}
+
+.search button {
+  /* padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer; */
+  float: left;
+  display: block;
+  overflow: hidden;
+  width: 26px;
+  height: 26px;
+  background: url(https://cdn.upbit.com/upbit-web/images/bg.feb3506.png) -90px 0 no-repeat;
+  text-indent: -999em;
+  border: none;
+}
+
+.search button:hover {
+  /* background-color: #218838; */
+  cursor: pointer;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+.ul{
+  list-style: none;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.on{
+  display: block;
+  width: 100%;
+  height: 44px;
+  line-height: 42px;
+  color: rgb(51, 51, 51);
+  font-family: Roboto, "Noto Sans KR", Dotum, 돋움, "sans-serif", Arial, Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 1px solid rgb(212, 214, 220);
+  text-decoration: none;
+}
+
+.on:hover{
+  border-bottom: 1.8px solid #0062df;
+}
+
+.on:focus, .on:active{
+  height: 42px;
+  border-bottom: 3px solid #0062df;
+  color: #0062df;
+  font-weight: 700;
+}
+
+.active {
+  height: 42px;
+  border-bottom: 3px solid #0062df;
+  color: #0062df;
+  font-weight: 700;
+}
+
+.category{
+  float: none;
+  display: table-cell;
+  width: auto;
+}
+
+.scrollBarContainer {
+  position: absolute;
+  width: 6px;
+  right: 2px;
+  bottom: 2px;
+  top: 2px;
+  border-radius: 3px;
+}
+
+.scrollBarHandle {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border-radius: inherit;
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 159px;
+  transform: translateY(0px);
+}
+
+.stockInfo {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.tableContainer {
+  background-color: white;
+  color: black;
+  /* padding: 10px; */
+  border-radius: 4px;
+  overflow-x: auto;
+  height: 100vh;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  font: inherit;
+  font-size: 14px;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+td, th {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+thead th, tbody td {
+  white-space: nowrap;
+}
+
+.errorRow {
+  background-color: white;
+}
+
+.errorCell {
+  color: red;
+  text-align: center;
+}
