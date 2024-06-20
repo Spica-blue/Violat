@@ -5,34 +5,40 @@ import user from './user.png';
 import logo from './sample2.png';
 import styles from './Header.module.css';
 import { NavLink } from "react-router-dom";
-import axios from 'axios';
+// import axios from 'axios';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
-  const LOGOUT_URL = 'http://127.0.0.1:8000/api/logout/';
-  const CHECK_LOGIN_STATUS_URL = 'http://127.0.0.1:8000/api/check_login_status/';
+  // const LOGOUT_URL = 'http://127.0.0.1:8000/api/logout/';
+  // const CHECK_LOGIN_STATUS_URL = 'http://127.0.0.1:8000/api/check_login_status/';
   const navigate = useNavigate();
 
 
+  // useEffect(() => {
+  //   checkLoginStatus();
+  // }, []);
+
   const checkLoginStatus = async () => {
-    try {
-      console.log("확인1")
-      const response = await axios.get(CHECK_LOGIN_STATUS_URL, {
-        withCredentials: true,
-      });
-      console.log("로그인결과:",response.data.is_logged_in);
-      if (response.data.is_logged_in) {
-        console.log("로그인상태");
-        setIsLoggedIn(true);
-        setUserId(response.data.user_id);
-      } else {
-        console.log("로그아웃상태");
-        setIsLoggedIn(false);
-      }
-    } catch (error) {
-      console.error('로그인 상태 확인 실패:', error);
-    }
+    // console.error('확인');
+    // try {
+    //   const token = localStorage.getItem('access_token');
+    //   console.log("토큰 :",token)
+    //   if (token) {
+    //     const response = await axios.get(CHECK_LOGIN_STATUS_URL, {
+    //       headers: { Authorization: `Bearer ${token}` },
+    //     });
+    //     // console.log("로그인결과:",response.data.is_logged_in)
+    //     if (response.data.is_logged_in) {
+    //       setIsLoggedIn(true);
+    //       setUserId(response.data.user_id);
+    //     } else {
+    //       setIsLoggedIn(false);
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.error('로그인 상태 확인 실패:', error);
+    // }
   };
 
   useEffect(() => {
@@ -40,17 +46,19 @@ function Header() {
   }, []);
 
   const handleLogout = async () => {
-    try {
-      await axios.post(LOGOUT_URL, {
-        withCredentials: true,
-      });
-      alert("로그아웃 성공");
-      setIsLoggedIn(false); //로그인 상태 false로 변환
-      setUserId(null);
-      navigate('/member/Login');
-    } catch (error) {
-      console.error('로그아웃 실패:', error.response ? error.response.data : error.message);
-    }
+    // try {
+    //   const response = await axios.post(LOGOUT_URL, {}, {
+    //     headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+    //   });
+    //   console.log('로그아웃 성공:', response.data);
+    //   localStorage.removeItem('access_token');
+    //   localStorage.removeItem('refresh_token');
+    //   alert("로그아웃 성공");
+    //   setIsLoggedIn(false); //로그인 상태 false로 변환
+    //   navigate('/member/Login');
+    // } catch (error) {
+    //   console.error('로그아웃 실패:', error.response ? error.response.data : error.message);
+    // }
   };
 
   const handleClickLogin = () => {
@@ -78,16 +86,26 @@ function Header() {
         </div>
       </div>
       <div className={styles.list}>
-        <div className={styles.row}>거래소</div>
-        <div className={styles.row}>입출금</div>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="../asset/Balance" title='투자내역'>
+          <NavLink className={styles.investment} to="#" title='가상계좌개설'>
+            가상계좌개설
+          </NavLink>
+        </div>
+        <div className={styles.row}>
+          <NavLink className={styles.investment} to="../asset/balance" title='투자내역'>
             투자내역
           </NavLink>
         </div>
-        <div className={styles.row}>코인동향</div>
-        <div className={styles.row}>스테이킹</div>
-        <div className={styles.row}>NFT</div>
+        <div className={styles.row}>
+          <NavLink className={styles.investment} to="../asset/rankings" title='순위'>
+            주식순위
+          </NavLink>
+        </div>
+        <div className={styles.row}>
+          <NavLink className={styles.investment} to="/trade/stock/삼성전자" title='트레이드'>
+            트레이드
+          </NavLink>
+        </div>
         <div className={styles.row}>
           <div onClick={handleClickMypage} className={styles.investment}>
             마이페이지

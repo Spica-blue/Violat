@@ -5,7 +5,7 @@ import Chart from 'react-apexcharts';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale} from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import Sidebar from './Sidbar';
+import styles from './StockChart.module.css';
 
 // Register the required components for line charts
 ChartJS.register(
@@ -272,49 +272,42 @@ const StockChart = () => {
     };
 
     return (
-        <div>
-            <section>
-                <article>
-                    <Sidebar />
-                </article>
-            </section>
-            <section>
-                <div style={{ marginLeft: '26%', padding: '20px' }}>
-                    <button onClick={handleShowRealtime}>Realtime</button>
-                    <button onClick={handleShowDaily}>Daily</button>
-                    {showRealtime ? (
-                        <Line options={lineChartOptions} data={realtimeChartData} />
-                    ) : (
-                        <>
-                            <Chart 
-                                options={candlestickChartOptions} 
-                                series={[
-                                    { 
-                                        name: 'Candlestick', 
-                                        type: 'candlestick', 
-                                        data: dailyData
-                                    }
-                                ]} 
-                                type="candlestick" 
-                                height={500}
-                            />
-                            <div style={{ height: '20px', borderBottom: '1px solid #000', marginBottom: '20px' }}></div>
-                            <Chart 
-                                options={volumeChartOptions} 
-                                series={[
-                                    { 
-                                        name: 'Volume', 
-                                        type: 'bar', 
-                                        data: volumeData
-                                    }
-                                ]} 
-                                type="bar" 
-                                height={200}
-                            />
-                        </>
-                    )}
-                </div>
-            </section>
+        <div className={styles.chart}>
+            <div>
+                <button onClick={handleShowRealtime}>Realtime</button>
+                <button onClick={handleShowDaily}>Daily</button>
+                {showRealtime ? (
+                    <Line options={lineChartOptions} data={realtimeChartData}/>
+                ) : (
+                    <>
+                        <Chart 
+                            options={candlestickChartOptions} 
+                            series={[
+                                { 
+                                    name: 'Candlestick', 
+                                    type: 'candlestick', 
+                                    data: dailyData
+                                }
+                            ]} 
+                            type="candlestick" 
+                            height={400}
+                        />
+                        <div style={{ height: '20px', borderBottom: '1px solid #000', marginBottom: '20px' }}></div>
+                        <Chart 
+                            options={volumeChartOptions} 
+                            series={[
+                                { 
+                                    name: 'Volume', 
+                                    type: 'bar', 
+                                    data: volumeData
+                                }
+                            ]} 
+                            type="bar" 
+                            height={200}
+                        />
+                    </>
+                )}
+            </div>
         </div>
     );
 };

@@ -1,7 +1,11 @@
+import { Link } from "react-router-dom";
 import styles from "../css/History.module.css";
 import AssetHeader from "./AssetHeader";
 
 export default function History() {
+    const oc = (e) => {
+        console(e.target)
+    }
 
     return (
         <>
@@ -29,9 +33,9 @@ export default function History() {
                                             <div className={styles.PureCalendar}>
                                                 <div className={styles.PureCalendar__period}>
                                                     <i className={styles.PureCalendar__CalendarIcon}></i>
-                                                    <a href="" className={styles.PureCalendar__date}>2024.05.16</a>
+                                                    <Link to="" className={styles.PureCalendar__date}>2024.05.16</Link>
                                                     <i className={styles.PureCalendar__DateSpace}>-</i>
-                                                    <a href="" className={styles.PureCalendar__date}>2024.06.15</a>
+                                                    <Link to="" className={styles.PureCalendar__date}>2024.06.15</Link>
                                                 </div>
                                                 <div className={styles.PureCalendar__container}>
 
@@ -57,7 +61,7 @@ export default function History() {
                                     <div className={styles.HistoryFilter__LayoutCell3}>
                                         <div className={styles.HistoryFilter__category}>코인선택</div>
                                         <div className={styles.SearchInput}>
-                                            <input type="text" className={styles.FormBlock__InputText} placeholder="전체" value=""/>
+                                            <input type="text" onChange={oc} className={styles.FormBlock__InputText} placeholder="전체" value=""/>
                                             <button className={styles.SearchInput__SearchBtn}>찾기</button>
                                         </div>
                                     </div>
@@ -85,9 +89,9 @@ export default function History() {
                                             <th className={styles.AmountTable__HeadTitle}>종류</th>
                                             <th className={styles.AmountTable__HeadTitle}>거래수량</th>
                                             <th className={styles.AmountTable__HeadTitle}>거래단가 
-                                                <a href="" className={styles.tooltipDown}>
+                                                <Link to="" className={styles.tooltipDown}>
                                                     <div>입출금 내역의 거래단가는 입출금 시점의 시세를 반영해 계산합니다.</div>
-                                                </a>
+                                                </Link>
                                             </th>
                                             <th className={styles.AmountTable__HeadTitle}>거래금액</th>
                                             <th className={styles.AmountTable__HeadTitle}>수수료</th>
@@ -115,7 +119,7 @@ export default function History() {
                                         </colgroup>
                                         <tbody>
                                             <tr className={styles.AmountTable__row}>
-                                                <td className={styles.AmountTable__cell__EmptyData} colspan="10">검색결과가 없습니다.</td>
+                                                <td className={styles.AmountTable__cell__EmptyData} colSpan="10">검색결과가 없습니다.</td>
                                             </tr>
                                         </tbody>
                                     </table>

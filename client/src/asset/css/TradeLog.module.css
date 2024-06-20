@@ -1,0 +1,98 @@
+.orderB {
+    display: block;
+    padding: 14px;
+}
+.orderB .max {
+    margin: -14px;
+}
+.orderB>div {
+    position: relative;
+}
+.orderB .max .ExHistorySet {
+    display: flex;
+    height: 50px;
+    padding: 0 14px;
+    font-family: "Roboto", "Noto Sans KR", sans-serif, Arial, Helvetica;
+    font-size: 14px;
+}
+.orderB .max .ExHistorySet__Radio {
+    flex: none;
+    line-height: 50px;
+}
+.orderB .max .ExHistorySet__Radio .globalRadio_blue:first-child {
+    margin-left: 0;
+}
+[class*=global][class*=Radio] input[type=radio] {
+    display: none;
+}
+.orderB .max .ExHistorySet__Radio input:checked+label {
+    color: #333;
+}
+.orderB .max .ExHistorySet__Radio label {
+    padding-left: 20px;
+    color: #666;
+}
+[class*=global][class*=Radio][class*=_blue] input[type=radio]+label {
+    padding-left: 26px;
+    line-height: 14px;
+}
+.orderB .max .ExHistorySet__Filter {
+    display: flex;
+    margin-left: auto;
+}
+.orderB .max .ExHistorySet__FilterItem:first-child {
+    margin-left: 0;
+}
+.orderB .max .ExHistorySet__FilterItem {
+    position: relative;
+    align-self: center;
+    margin-left: 12px;
+    padding-left: 12px;
+}
+.DropFilter {
+    font-family: "Roboto", "Noto Sans KR", sans-serif, Arial, Helvetica;
+    font-size: 12px;
+}
+.max .ExHistoryTable {
+    border-top: 1px solid #e3e5ec;
+    max-height: 300px; /* 테이블의 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤바 추가 */
+}
+table {
+    width: 100%;
+}
+table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.orderB .max .ExHistoryTable thead tr:first-child th:first-child {
+    border-width: 0 1px 1px 0;
+}
+.orderB .max .ExHistoryTable thead tr:first-child th {
+    border-top: 0;
+}
+.orderB .max .ExHistoryTable thead tr th {
+    height: 28px;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    color: #666;
+    font-family: "Roboto", "Noto Sans KR", sans-serif, Arial, Helvetica;
+    font-size: 11px;
+}
+.orderB .max .ExHistoryTable__ScrollHeight {
+    height: 323px;
+}
+.orderB .max .ExHistoryTable {
+    border-top: 1px solid #e3e5ec;
+}
+.orderB .max .ExHistoryTable tbody tr td.ExHistoryTable__Empty {
+    height: 326px;
+    padding: 0;
+    border-bottom: 0;
+    color: #999;
+    font-family: "Roboto", "Noto Sans KR", sans-serif, Arial, Helvetica;
+    font-size: 12px;
+    text-align: center;
+    border-top: 0;
+}

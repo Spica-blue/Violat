@@ -4,7 +4,7 @@ import styles from './Sidebar.module.css'; // CSS 모듈 파일을 사용하여 
 import { Link } from 'react-router-dom';
 import ScrollBar from '../components/ScrollBar';
 
-function Sidebar() {
+function Sidebar({ onStockSelect }) {
   const [stockName, setStockName] = useState('');
   const [stockInfo, setStockInfo] = useState(null);
   const [allStocks, setAllStocks] = useState([]);
@@ -169,7 +169,7 @@ function Sidebar() {
         <table>
           <thead>
             <tr>
-              <th>종목이름</th>
+              <th>종목명</th>
               <th>현재가</th>
               <th>전일대비</th>
               <th>거래대금(백만)</th>
@@ -182,7 +182,7 @@ function Sidebar() {
               </tr>
             ) : stockInfo ? (
               <tr>
-                <td><Link to={`/trade/stock/${stockInfo.stock_name}`}>{stockInfo.stock_name}{console.log("검새ㅐㅐㅐㅐㅐㅐㄱ:",stockInfo)}</Link></td>
+                <td className={styles.stockNameCell}><Link to={`/trade/stock/${stockInfo.stock_name}`}>{stockInfo.stock_name}{console.log("검새ㅐㅐㅐㅐㅐㅐㄱ:",stockInfo)}</Link></td>
                 <td>{stockInfo.current_price}</td>
                 <td
                   style={{
@@ -197,7 +197,7 @@ function Sidebar() {
             ) : (
               allStocks.map((stock, index) => (
                 <tr key={index}>
-                  <td><Link to={`/trade/stock/${stock.stock_name}`}>{stock.stock_name}</Link></td> {/* 종목 코드 */}
+                  <td className={styles.stockNameCell}><Link to={`/trade/stock/${stock.stock_name}`}>{stock.stock_name}</Link></td> {/* 종목 코드 */}
                   <td>{stock.current_price}</td> {/* 현재가 */}
                   <td
                     style={{

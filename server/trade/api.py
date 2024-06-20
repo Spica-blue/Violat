@@ -133,7 +133,7 @@ def load_realtime_stock_data():
     if os.path.exists('realtime_stock_data.json'):
         with open('realtime_stock_data.json', 'r', encoding='utf-8') as file:
             all_stocks_data = json.load(file)
-        print("실시간 데이터 파일 읽기: ", all_stocks_data)
+        # print("실시간 데이터 파일 읽기: ", all_stocks_data)
 
 # 열 이름에 맞추어 종목명을 통해 종목코드를 조회하는 함수
 def get_stock_code_by_name(stock_name):
