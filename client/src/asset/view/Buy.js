@@ -1,14 +1,18 @@
 import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 export default function Buy() {
+    const { stockName } = useParams(); // useParams 훅으로 URL에서 stockName을 가져옴
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [stockCode, setStockCode] = useState('');
+    const [stockCode, setStockCode] = useState(stockName);
     const [quantity, setQuantity] = useState('');
     const [price, setPrice] = useState('');
     const [totalAmount, setTotalAmount] = useState('');
     const [availableBalance, setAvailableBalance] = useState(0);
+
+    console.log("이름 가져옴?",stockName);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/balance/', {
@@ -82,6 +86,12 @@ export default function Buy() {
             setIsLoading(false);
         });
     }
+
+    useEffect(() => {
+        if (stockName) {
+            setStockCode(stockName); // Set the stock code when stockName changes
+        }
+    }, [stockName]);
     
 
     return (

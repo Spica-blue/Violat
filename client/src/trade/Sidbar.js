@@ -144,7 +144,7 @@ function Sidebar({ onStockSelect }) {
               현재가
             </Link>
           </li>
-          {/* <li className={styles.category}>
+          <li className={styles.category}>
             <Link 
               to="#" 
               className={`${styles.on} ${activeTab === '보유' ? styles.active : ''}`} 
@@ -153,8 +153,8 @@ function Sidebar({ onStockSelect }) {
             >
               보유
             </Link>
-          </li> */}
-          <li className={styles.category}>
+          </li>
+          {/* <li className={styles.category}>
             <Link 
               to="#" 
               className={`${styles.on} ${activeTab === '관심' ? styles.active : ''}`} 
@@ -163,7 +163,7 @@ function Sidebar({ onStockSelect }) {
             >
               관심
             </Link>
-          </li>
+          </li> */}
         </ul>
         <ScrollBar>
         <table>
