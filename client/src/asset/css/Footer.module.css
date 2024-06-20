@@ -107,7 +107,7 @@
     color: rgb(102, 102, 102);
 }
 .css_ayj15i > div {
-    min-width: 210px;
+    min-width: 200px;
 }
 .css_1v9p6ny {
     line-height: 21px;
@@ -136,3 +136,12 @@
     font-size: 15px;
     color: rgb(0, 53, 151);
 }
+
+.h1{
+    color: blueviolet;
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  
