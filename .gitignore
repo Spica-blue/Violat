@@ -32,3 +32,4 @@ token.dat
 
 # Ignore Python bytecode files
 *.pyc
+*.csv
