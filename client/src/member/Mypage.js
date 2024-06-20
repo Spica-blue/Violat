@@ -13,6 +13,10 @@ function Mypage() {
     checkLoginStatus();
   }, []);
   
+  const handleRefresh = () =>{
+    window.location.reload();
+  };
+
   const clickedHandler = async () =>{
     try{
       console.log("들어옴")
@@ -25,7 +29,9 @@ function Mypage() {
       localStorage.removeItem('refresh_token');
 
       alert('회원탈퇴가 되었습니다.')
+      setUserId(null)
       navigate('/');
+      handleRefresh();
     } catch(error){
       console.error("회원탈퇴 실패:", error.response ? error.response.data : error.message)
     }
