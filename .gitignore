@@ -29,3 +29,6 @@ kosdaq_code.mst
 kospi_code_part2.tmp
 kospi_code.mst
 token.dat
+
+# Ignore Python bytecode files
+*.pyc
