@@ -83,20 +83,20 @@ function Header() {
       </div>
       <div className={styles.list}>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="/trade/stock/삼성전자" title='거래소'>
-            거래소
+          <NavLink className={styles.investment} to="#" title='가상계좌개설'>
+            가상계좌개설
           </NavLink>
         </div>
-        
-        <div className={styles.row}>입출금</div>
         <div className={styles.row}>
           <NavLink className={styles.investment} to="../asset/Balance" title='투자내역'>
             투자내역
           </NavLink>
         </div>
-        <div className={styles.row}>코인동향</div>
-        <div className={styles.row}>스테이킹</div>
-        <div className={styles.row}>NFT</div>
+        <div className={styles.row}>
+          <NavLink className={styles.investment} to="/trade/stock/" title='트레이드'>
+            트레이드
+          </NavLink>
+        </div>
         <div className={styles.row}>
           <div onClick={handleClickMypage} className={styles.investment}>
             마이페이지
