@@ -90,7 +90,7 @@ def signup(request):
       return Response({'success': False, 'message': '이미 존재하는 아이디입니다.'}, status=400)
     
     account_number = random.randint(10000, 99999)
-    print("계좌 생성", account_number, flush=True);
+    print("계좌 생성", account_number, flush=True)
 
     new_user = {
       'id': username,

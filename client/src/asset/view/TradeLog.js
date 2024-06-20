@@ -20,7 +20,7 @@ export default function TradeLog({ reloadLog }) {
             console.error('Error fetching trade log:', error);
             setLogData([]); // 기본값 설정
         });
-    }, [reloadLog]); // reloadLog 상태 변경 시마다 데이터 로드
+    }, [reloadLog]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -100,6 +100,52 @@ export default function TradeLog({ reloadLog }) {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div className={styles.ExHistoryTable}>
+                        <table>
+                            <colgroup>
+                                <col width="150px" />
+                                <col width="170px" />
+                                <col width="100px" />
+                                <col width="120px" />
+                                <col />
+                                <col width="64px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>주문일자</th>
+                                    <th>종목명</th>
+                                    <th>매수/매도</th>
+                                    <th>주문가</th>
+                                    <th>주문총액</th>
+                                    <th>주문량</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div className={styles.ExHistoryTable}>
+                        <table>
+                            <colgroup>
+                                <col width="150px" />
+                                <col width="170px" />
+                                <col width="80px" />
+                                <col width="120px" />
+                                <col />
+                                <col width="64px" />
+                            </colgroup>
+                            <tbody>
+                                {logData.map((items, index) => (
+                                    <tr key={index}>
+                                        <td>{formatDate(items.trade_time)}</td>
+                                        <td>{items.stock_code}</td>
+                                        <td>{items.buy_or_sell}</td>
+                                        <td>{items.trade_price}</td>
+                                        <td>{items.order_price}</td>
+                                        <td>{items.trade_quantity}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </span>
             </article>
