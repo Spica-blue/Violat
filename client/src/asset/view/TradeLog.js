@@ -14,8 +14,8 @@ export default function TradeLog() {
     }, []);
 
     const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        return new Date(dateString).toLocaleDateString('ko-KR', options);
+        const date = new Date(dateString);
+        return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
     };
 
     return (

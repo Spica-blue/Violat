@@ -1,11 +1,24 @@
 import { Link } from "react-router-dom";
 import styles from "../css/History.module.css";
 import AssetHeader from "./AssetHeader";
+import { useEffect, useState } from "react";
 
 export default function History() {
-    const oc = (e) => {
-        console(e.target)
-    }
+    const [logData, setLogData] = useState([]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/asset/tradeLog')
+            .then(res => res.json())
+            .then(data => {
+                setLogData(data);
+                console.log(data);
+            });
+    }, []);
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        return new Date(dateString).toLocaleDateString('ko-KR', options);
+    };
 
     return (
         <>
@@ -61,7 +74,7 @@ export default function History() {
                                     <div className={styles.HistoryFilter__LayoutCell3}>
                                         <div className={styles.HistoryFilter__category}>코인선택</div>
                                         <div className={styles.SearchInput}>
-                                            <input type="text" onChange={oc} className={styles.FormBlock__InputText} placeholder="전체" value=""/>
+                                            <input type="text" className={styles.FormBlock__InputText} placeholder="전체" value=""/>
                                             <button className={styles.SearchInput__SearchBtn}>찾기</button>
                                         </div>
                                     </div>
@@ -100,10 +113,7 @@ export default function History() {
                                         </tr>
                                     </thead>
                                 </table>
-                                <div style={{
-                                    height: "687px",
-                                    overflow: "auto"
-                                }}>
+                                <div style={{ height: "687px", overflow: "auto" }}>
                                     <table className={styles.AmountTable__BodyTable}>
                                         <colgroup>
                                             <col width="94"/>
@@ -118,9 +128,26 @@ export default function History() {
                                             <col width="94"/>
                                         </colgroup>
                                         <tbody>
-                                            <tr className={styles.AmountTable__row}>
-                                                <td className={styles.AmountTable__cell__EmptyData} colSpan="10">검색결과가 없습니다.</td>
-                                            </tr>
+                                            {logData.length === 0 ? (
+                                                <tr className={styles.AmountTable__row}>
+                                                    <td className={styles.AmountTable__cell__EmptyData} colSpan="10">검색결과가 없습니다.</td>
+                                                </tr>
+                                            ) : (
+                                                logData.map((log, index) => (
+                                                    <tr className={styles.AmountTable__row} key={index}>
+                                                        <td className={styles.AmountTable__cell}>{formatDate(log.execution_time)}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.coin}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.market}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.type}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.quantity.toFixed(1)}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.price.toFixed(1)}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.amount.toFixed(1)}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.fee.toFixed(1)}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.settlement_amount.toFixed(1)}</td>
+                                                        <td className={styles.AmountTable__cell}>{formatDate(log.order_time)}</td>
+                                                    </tr>
+                                                ))
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
