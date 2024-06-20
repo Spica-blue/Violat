@@ -10,7 +10,7 @@
 }
 .orderB .max .ExHistorySet {
     display: flex;
-    height: 50px;
+    height: 15px;
     padding: 0 14px;
     font-family: "Roboto", "Noto Sans KR", sans-serif, Arial, Helvetica;
     font-size: 14px;
@@ -55,7 +55,7 @@
 }
 .max .ExHistoryTable {
     border-top: 1px solid #e3e5ec;
-    max-height: 300px; /* 테이블의 최대 높이 설정 */
+    max-height: 440px; /* 테이블의 최대 높이 설정 */
     overflow-y: auto; /* 세로 스크롤바 추가 */
 }
 table {

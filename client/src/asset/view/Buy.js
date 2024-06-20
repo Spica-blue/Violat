@@ -179,7 +179,7 @@ export default function Buy() {
                         <div className={styles.css_1gf7e9w}>
                             <div className={styles.css_xsmrp6}>
                                 <button title="초기화" className={styles.css_1xupxm9} onClick={() => { setStockCode(''); setQuantity(''); setPrice(''); setTotalAmount(''); }}>초기화</button>
-                                <button title="매수" className={styles.css_1xupxm9} disabled={isLoading}>
+                                <button title="매수" className={styles.css_1xupxm10} disabled={isLoading}>
                                     {isLoading ? "진행중" : "매수"}
                                 </button>
                             </div>

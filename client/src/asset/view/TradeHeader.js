@@ -1,32 +1,25 @@
-import { NavLink } from 'react-router-dom';
 import styles from '../css/TradeHeader.module.css';
 
-export default function TradeHeader() {
+export default function TradeHeader({ setActiveTab, activeTab }) {
     return (
         <>
             <span className={styles.tabB}>
                 <ul className={styles.top}>
                     <li className={styles.tabB__buy}>
-                        <NavLink
-                            className={({ isActive }) =>
-                                styles.tabB__button + (isActive ? ` ${styles.tabB__button__active}` : '')
-                            }
-                            title="매수"
-                            to="tradeBuy"
+                        <button
+                            className={activeTab === "buy" ? styles.activeBuy : ""}
+                            onClick={() => setActiveTab("buy")}
                         >
                             매수
-                        </NavLink>
+                        </button>
                     </li>
                     <li className={styles.tabB__sell}>
-                        <NavLink
-                            className={({ isActive }) =>
-                                styles.tabB__button + (isActive ? ` ${styles.tabB__button__active}` : '')
-                            }
-                            title="매도"
-                            to="tradeSell"
+                        <button
+                             className={activeTab === "sell" ? styles.activeSell : ""}
+                             onClick={() => setActiveTab("sell")}
                         >
                             매도
-                        </NavLink>
+                        </button>
                     </li>
                 </ul>
             </span>
