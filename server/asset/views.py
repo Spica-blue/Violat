@@ -240,8 +240,8 @@ def update_stock_data_periodically():
         time.sleep(300)  # 5분마다 업데이트
 
 # 주식 데이터를 주기적으로 업데이트하는 스레드 시작
-update_thread = threading.Thread(target=update_stock_data_periodically, daemon=True)
-update_thread.start()
+# update_thread = threading.Thread(target=update_stock_data_periodically, daemon=True)
+# update_thread.start()
 
 
 
