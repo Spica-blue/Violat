@@ -21,3 +21,11 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Ignore specific files
+kosdaq_code.mst.zip
+kospi_code.mst.zip
+kosdaq_code.mst
+kospi_code_part2.tmp
+kospi_code.mst
+token.dat
