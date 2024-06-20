@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import StockChart from "./StockChart";
-import Sidebar from './Sidebar';
 import TradeLog from "../asset/view/TradeLog";
 import styles from "./Stock.module.css";
 import Trade from "./Trade";
+import Sidebar from './Sidbar';
 
 function Stock() {
   const { stockName } = useParams(); // Get stockName from URL
@@ -19,7 +19,7 @@ function Stock() {
   return (
     <div className={styles.display}>
       <div className={styles.sidebar}>
-        <Sidebar />
+        <Sidebar/>
       </div>
       <div className={styles.chartContainer}>
         <StockChart stockName={stockName} />

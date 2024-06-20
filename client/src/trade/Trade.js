@@ -30,7 +30,6 @@ function Trade() {
       <div className={styles.tradeContent}>
         {renderContent()}
       </div>
-      <TradeLog reloadLog={reloadLog} />
     </div>
   );
 }

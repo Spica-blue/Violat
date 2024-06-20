@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +10,8 @@ export default function Sell({ onTradeComplete }) {
     const [price, setPrice] = useState('');
     const [totalAmount, setTotalAmount] = useState('');
     const [availableSell, setAvailableSell] = useState(0);
+    const navigate = useNavigate();
+    const sessionId = window.sessionStorage.getItem("sessionid");
 
     useEffect(() => {
         const requestBody = {
@@ -94,6 +96,15 @@ export default function Sell({ onTradeComplete }) {
             setStockCode(stockName);
         }
     }, [stockName]);
+
+    const handleClickSell = () => {
+        if (sessionId) {
+          navigate('/');
+        } else {
+          alert("로그인시 이용가능합니다.");
+          navigate('/member/Login');
+        }
+    }
 
     return (
         <>
@@ -188,7 +199,7 @@ export default function Sell({ onTradeComplete }) {
                         <div className={styles.css_1gf7e9w}>
                             <div className={styles.css_xsmrp6}>
                                 <button type="button" title="초기화" className={styles.css_1xupxm9} onClick={() => { setStockCode(''); setQuantity(''); setPrice(''); setTotalAmount(''); }}>초기화</button>
-                                <button type="submit" title="매도" className={styles.css_1xupxm11} disabled={isLoading}>
+                                <button onClick={handleClickSell} type="submit" title="매도" className={styles.css_1xupxm11} disabled={isLoading}>
                                     {isLoading ? "진행중" : "매도"}
                                 </button>
                             </div>

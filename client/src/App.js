@@ -14,6 +14,7 @@ import SignUp from "./member/SignUp";
 import Mypage from './member/Mypage';
 import Stock from "./trade/Stock";
 import FooterSub from "./asset/view/FooterSub";
+import Account from "./member/Account";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/member/SignUp" element= {<SignUp/>} />
           <Route path="/member/login" element= {<Login/>} />
           <Route path="/member/Mypage" element= {<Mypage/>} />
+          <Route path="/member/Account" element= {<Account/>} />
           <Route path='/asset/balance' element={<Balance/>}/>
           <Route path='/asset/income' element={<Income/>}/>
           <Route path='/asset/history' element={<History/>}/>

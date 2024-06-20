@@ -73,7 +73,7 @@ function Header() {
 
   const handleClickAccount = () => {
     if (isLoggedIn) {
-      navigate('/');
+      navigate('/memeber/Account');
     } else {
       alert("로그인시 이용가능합니다.");
       navigate('/member/Login');
@@ -89,7 +89,7 @@ function Header() {
       </div>
       <div className={styles.list}>
         <div className={styles.row}>
-          <div onClick={handleClickBalance} className={styles.investment} title='가상계좌개설'>
+          <div onClick={handleClickAccount} className={styles.investment} title='가상계좌개설'>
             가상계좌개설
           </div>
         </div>

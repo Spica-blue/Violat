@@ -3,6 +3,7 @@ import styles from '../css/TradeLog.module.css';
 
 export default function TradeLog({ reloadLog }) {
     const [logData, setLogData] = useState([]);
+    const sessionId = window.sessionStorage.getItem("sessionid");
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/tradeLog')
@@ -77,16 +78,25 @@ export default function TradeLog({ reloadLog }) {
                                     <col width="64px" />
                                 </colgroup>
                                 <tbody>
-                                    {logData.map((items, index) => (
-                                        <tr key={index}>
-                                            <td>{formatDate(items.trade_time)}</td>
-                                            <td>{items.stock_code}</td>
-                                            <td>{items.buy_or_sell}</td>
-                                            <td>{items.order_price}</td>
-                                            <td>{items.trade_price}</td>
-                                            <td>{items.trade_quantity}</td>
-                                        </tr>
-                                    ))}
+                                    {sessionId ? (
+                                        logData.map((items, index) => (
+                                            <tr key={index}>
+                                                <td>{formatDate(items.trade_time)}</td>
+                                                <td>{items.stock_code}</td>
+                                                <td>{items.buy_or_sell}</td>
+                                                <td>{items.order_price}</td>
+                                                <td>{items.trade_price}</td>
+                                                <td>{items.trade_quantity}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <div style={{    
+                                            position: 'absolute',
+                                            top: '250px',
+                                            left: '36%'}}>
+                                            로그인시 이용가능합니다.
+                                        </div>
+                                    )}
                                 </tbody>
                             </table>
                         </div>
