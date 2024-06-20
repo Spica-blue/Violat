@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import styles from '../css/Buy.module.css';
+import styles from '../css/TradeHeader.module.css';
 
 export default function TradeHeader() {
     return (
@@ -12,7 +12,7 @@ export default function TradeHeader() {
                                 styles.tabB__button + (isActive ? ` ${styles.tabB__button__active}` : '')
                             }
                             title="매수"
-                            to="/asset/buy"
+                            to="tradeBuy"
                         >
                             매수
                         </NavLink>
@@ -23,20 +23,9 @@ export default function TradeHeader() {
                                 styles.tabB__button + (isActive ? ` ${styles.tabB__button__active}` : '')
                             }
                             title="매도"
-                            to="/asset/sell"
+                            to="tradeSell"
                         >
                             매도
-                        </NavLink>
-                    </li>
-                    <li className={styles.tabB__history}>
-                        <NavLink
-                            className={({ isActive }) =>
-                                styles.tabB__button + (isActive ? ` ${styles.tabB__button__active}` : '')
-                            }
-                            title="거래내역"
-                            to="/asset/tradeLog"
-                        >
-                            거래내역
                         </NavLink>
                     </li>
                 </ul>

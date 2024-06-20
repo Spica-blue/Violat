@@ -1,6 +1,5 @@
 import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
-import TradeHeader from './TradeHeader';
 
 export default function Buy() {
     const [data, setData] = useState([]);
@@ -88,7 +87,6 @@ export default function Buy() {
     return (
         <>
             <article>
-                <TradeHeader/>
                 <form onSubmit={buyStock}>
                     <div className={styles.css_1trmusf}>
                         <div className={styles.css_ofkx68}>

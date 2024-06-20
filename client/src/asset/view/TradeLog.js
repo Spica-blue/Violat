@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import styles from '../css/TradeLog.module.css';
-import TradeHeader from './TradeHeader';
 
 export default function TradeLog() {
     const [logData, setLogData] = useState([]);
@@ -22,7 +21,6 @@ export default function TradeLog() {
     return (
         <>
             <article>
-                <TradeHeader />
                 <span className={styles.orderB}>
                     <div className={styles.max}>
                         <div className={styles.ExHistorySet}>

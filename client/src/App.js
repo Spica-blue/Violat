@@ -12,7 +12,8 @@ import SignUp from "./member/SignUp";
 import TradeLog from "./asset/view/TradeLog";
 import Buy from "./asset/view/Buy";
 import Sell from "./asset/view/Sell";
-import AssetDistribution from "./asset/view/AssetDistribution";
+import Mypage from './member/Mypage';
+import Stock from "./trade/Stock";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path='/asset/sell' element={<Sell />} />
           <Route path='/asset/tradeLog' element={<TradeLog />} />
           {/* <Route path='/asset/distribution' element={<AssetDistribution accountNum="1111" />} /> */}
+          <Route path='/trade/stock/*' element={<Stock/>}/>
         </Routes>
         <Footer />
       </BrowserRouter>

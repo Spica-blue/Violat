@@ -1,6 +1,5 @@
 import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
-import TradeHeader from './TradeHeader';
 
 export default function Sell() {
     const [isLoading, setIsLoading] = useState(false);
