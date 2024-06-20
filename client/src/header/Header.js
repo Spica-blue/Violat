@@ -51,7 +51,7 @@ function Header() {
       localStorage.removeItem('refresh_token');
       alert("로그아웃 성공");
       setIsLoggedIn(false); //로그인 상태 false로 변환
-      navigate('/member/login');
+      navigate('/member/Login');
     } catch (error) {
       console.error('로그아웃 실패:', error.response ? error.response.data : error.message);
     }
@@ -62,8 +62,8 @@ function Header() {
   };
 
   const handleClickMain = () => {
-    navigate('/')
-  }
+    navigate('/');
+  };
 
   const handleClickMypage = () => 
     {isLoggedIn ? (
@@ -71,6 +71,8 @@ function Header() {
     ) : (
       navigate('/member/Login')
     )}
+  
+    
 
   return (
     <div className={styles.header}>
@@ -81,7 +83,7 @@ function Header() {
       </div>
       <div className={styles.list}>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="/trade/stock" title='거래소'>
+          <NavLink className={styles.investment} to="/trade/stock/삼성전자" title='거래소'>
             거래소
           </NavLink>
         </div>
