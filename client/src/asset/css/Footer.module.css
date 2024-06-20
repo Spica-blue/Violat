@@ -130,6 +130,9 @@
     font-size: 14px;
     color: inherit;
 }
+.css_l1ok div {
+    cursor: pointer;
+}
 .css_ffkz39 {
     line-height: 22px;
     font-weight: 700;

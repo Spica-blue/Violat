@@ -13,6 +13,7 @@ import Footer from "./asset/view/Footer";
 import SignUp from "./member/SignUp";
 import Mypage from './member/Mypage';
 import Stock from "./trade/Stock";
+import FooterSub from "./asset/view/FooterSub";
 
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
           <Route path='/asset/history' element={<History/>}/>
           <Route path='/asset/rankings' element={<Rankings/>}/>
           <Route path='/trade/stock/:stockName/*' element={<Stock/>}/>
+          <Route path='/view/FooterSub' element={<FooterSub/>}/>
+          
         </Routes>
         <Footer/>
       </BrowserRouter>
