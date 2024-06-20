@@ -4,9 +4,7 @@
   font-weight: 600;
   margin-top: 10px;
 }
-.h3{
-  font-size: 1rem;
-}
+
 
 
 .body {
@@ -22,12 +20,39 @@
   justify-content: center;
 }
 
+
 .box1 {
-  /* width: 100%; */
   width: calc(100% - 80px);
-  background-color: white;
+  background-color: #2B5EF5;
   border-radius: 4px;
   padding: 20px;
   margin: 20px;
-  height: 75%;
+  height: 90%;
+  display: inline-block;
+  text-align: center;
+  align-items: center;
+  /* justify-items: center; */
+  
+}
+
+.coment{
+  margin-top: 4rem;
+  color: white;
+}
+
+.h3{
+  font-size: 2rem;
+}
+
+.h5{
+  font-size: 1.3rem;
+}
+
+.h6{
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.img{
+  width: 600px;
 }
