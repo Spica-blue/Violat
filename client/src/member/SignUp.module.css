@@ -1,83 +1,83 @@
 /* src/member/Sign_up.module.css */
 
 .h2 {
-    font-size: 1rem;
-    font-weight: bold;
-  }
+  font-size: 1rem;
+  font-weight: bold;
+}
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: calc(100vh - 4rem);
-  background-image: url('https://wbstatic.webullfintech.com/v1/webull-us-g/assets/77ac67cea715a7e26a86e4c874064b15.webp');
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: calc(100vh - 4rem);
+background-image: url('https://wbstatic.webullfintech.com/v1/webull-us-g/assets/77ac67cea715a7e26a86e4c874064b15.webp');
 }
 
 .form {
-  width: 400px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 10px;
+width: 400px;
+padding: 20px;
+display: flex;
+flex-direction: column;
+background: white;
+border-radius: 10px;
 }
 
 .inputWrapper {
-  margin-bottom: 20px;
+margin-bottom: 20px;
 }
 
 .inputContainer {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
+display: flex;
+flex-direction: column;
+margin-bottom: 15px;
 }
 
 .input {
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  font-weight: bold;
+padding: 15px;
+border: 1px solid #ccc;
+border-radius: 5px;
+margin-bottom: 5px;
+font-weight: bold;
 }
 
 .buttonContainer {
-  display: flex;
-  justify-content: center;
+display: flex;
+justify-content: center;
 }
 
 .button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+padding: 10px 20px;
+background-color: #007bff;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .button:hover {
-  background-color: #0056b3;
+background-color: #0056b3;
 }
 
 .error {
-  color: red;
-  margin-top: 5px;
+color: red;
+margin-top: 5px;
 }
 
 .idAvailable {
-  color: green;
-  margin-top: 5px;
+color: green;
+margin-top: 5px;
 }
 
 .modal {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-  border-radius: 5px;
+margin-top: 20px;
+padding: 10px;
+background-color: #d4edda;
+color: #155724;
+border: 1px solid #c3e6cb;
+border-radius: 5px;
 }
 
 .loginButton{
-  color: rgb(0, 72, 255);
-  margin-top: 10px;
+color: rgb(0, 72, 255);
+margin-top: 10px;
 }
