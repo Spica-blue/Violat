@@ -15,6 +15,7 @@ import TradeLog from "./asset/view/TradeLog";
 import Buy from "./asset/view/Buy";
 import Sell from "./asset/view/Sell";
 import Mypage from './member/Mypage';
+import Stock from "./trade/Stock";
 
 
 function App() {
@@ -33,9 +34,7 @@ function App() {
           <Route path='/asset/income' element={<Income/>}/>
           <Route path='/asset/history' element={<History/>}/>
           <Route path='/asset/rankings' element={<Rankings/>}/>
-          <Route path='/asset/buy' element={<Buy/>}/>
-          <Route path='/asset/sell' element={<Sell/>}/>
-          <Route path='/asset/tradeLog' element={<TradeLog/>}/>
+          <Route path='/trade/stock/*' element={<Stock/>}/>
         </Routes>
         <Footer/>
       </BrowserRouter>

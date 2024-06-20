@@ -98,7 +98,7 @@ function Header() {
           </NavLink>
         </div>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="/trade/stock" title='트레이드'>
+          <NavLink className={styles.investment} to="/trade/stock/삼성전자" title='트레이드'>
             트레이드
           </NavLink>
         </div>
