@@ -88,12 +88,17 @@ function Header() {
           </NavLink>
         </div>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="../asset/Balance" title='투자내역'>
+          <NavLink className={styles.investment} to="../asset/balance" title='투자내역'>
             투자내역
           </NavLink>
         </div>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="/trade/stock/" title='트레이드'>
+          <NavLink className={styles.investment} to="../asset/rankings" title='순위'>
+            주식순위
+          </NavLink>
+        </div>
+        <div className={styles.row}>
+          <NavLink className={styles.investment} to="../asset/buy" title='트레이드'>
             트레이드
           </NavLink>
         </div>

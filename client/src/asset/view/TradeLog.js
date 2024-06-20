@@ -1,0 +1,97 @@
+import { useEffect, useState } from 'react';
+import styles from '../css/TradeLog.module.css';
+import TradeHeader from './TradeHeader';
+
+export default function TradeLog() {
+    const [logData, setLogData] = useState([]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/asset/tradeLog')
+            .then(res => res.json())
+            .then(data => {
+                setLogData(data);
+                console.log(data);
+            });
+    }, []);
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Date(dateString).toLocaleDateString('ko-KR', options);
+    };
+
+    return (
+        <>
+            <article>
+                <TradeHeader />
+                <span className={styles.orderB}>
+                    <div className={styles.max}>
+                        <div className={styles.ExHistorySet}>
+                            <div className={styles.ExHistorySet__Radio}>
+                                {/* <span className={styles.globalRadio_blue}>
+                                    <input type="radio" id="ExHistory_openorder" name="ExHistory_radio"/>
+                                    <label htmlFor="ExHistory_openorder">미체결</label>
+                                </span>
+                                <span className={styles.globalRadio_blue}>
+                                    <input type="radio" id="ExHistory_completed" name="ExHistory_radio"/>
+                                    <label htmlFor="ExHistory_completed">체결</label>
+                                </span> */}
+                            </div>
+                            <div className={styles.ExHistorySet__Filter}>
+
+                            </div>
+                        </div>
+                        <div className={styles.ExHistoryTable}>
+                            <table>
+                                <colgroup>
+                                    <col width="120px" />
+                                    <col width="90px" />
+                                    <col width="70px" />
+                                    <col />
+                                    <col width="64px" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>주문일자</th>
+                                        <th>종목명</th>
+                                        <th>매수/매도</th>
+                                        <th>주문총액</th>
+                                        <th>주문가</th>
+                                        <th>주문량</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div className={styles.ExHistoryTable}>
+                            <table>
+                                <colgroup>
+                                    <col width="120px" />
+                                    <col width="90px" />
+                                    <col width="70px" />
+                                    <col />
+                                    <col width="64px" />
+                                </colgroup>
+                                <tbody>
+                                    {/* <tr>
+                                        <td colSpan="5" className={styles.ExHistoryTable__Empty}>
+                                            <span className={styles.ExHistoryTable__EmptyText}>미체결 내역이 없습니다.</span>
+                                        </td>
+                                    </tr> */}
+                                    {logData.map((items, index) => (
+                                        <tr key={index}>
+                                            <td>{formatDate(items.trade_time)}</td>
+                                            <td>{items.stock_code}</td>
+                                            <td>{items.buy_or_sell}</td>
+                                            <td>{items.order_price}</td>
+                                            <td>{items.trade_price}</td>
+                                            <td>{items.trade_quantity}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </span>
+            </article>
+        </>
+    );
+}

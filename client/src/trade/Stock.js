@@ -9,7 +9,7 @@ function Stock() {
     <div className="App">
       <section style={{ display: 'flex' }}>
         <article style={{ flex: '0 0 20%' }}>
-          <Sidebar />
+          <Sidebar/>
         </article>
         <article style={{ flex: '1' }}>
           <Routes>
