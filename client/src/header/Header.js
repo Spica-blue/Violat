@@ -81,7 +81,7 @@ function Header() {
       </div>
       <div className={styles.list}>
         <div className={styles.row}>
-          <NavLink className={styles.investment} to="/trade/stock/삼성전자" title='거래소'>
+          <NavLink className={styles.investment} to="/trade/stock" title='거래소'>
             거래소
           </NavLink>
         </div>

@@ -33,8 +33,7 @@ function App() {
           <Route path='/asset/history' element={<History/>}/>
           <Route path='/asset/rankings' element={<Rankings/>}/>
           <Route path="/member/Mypage" element= {<Mypage/>} />
-          {/* <Route path="/trade/stock/:stockName" element= {<StockChart/>} /> */}
-          <Route path="/trade/stock" element={<Stock/>} />
+          <Route path="/trade/stock/*" element={<Stock />} />
         </Routes>
         <Footer/>
       </BrowserRouter>
