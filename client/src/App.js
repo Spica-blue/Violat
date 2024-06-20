@@ -32,7 +32,7 @@ function App() {
           <Route path='/asset/income' element={<Income/>}/>
           <Route path='/asset/history' element={<History/>}/>
           <Route path='/asset/rankings' element={<Rankings/>}/>
-          <Route path='/trade/stock/*' element={<Stock/>}/>
+          <Route path='/trade/stock/:stockName/*' element={<Stock/>}/>
           <Route path='/view/FooterSub' element={<FooterSub/>}/>
           
         </Routes>

@@ -16,8 +16,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 # import django
 # django.setup()
 
-
-
 # UTF-8 인코딩을 사용하도록 설정
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
@@ -25,23 +23,11 @@ sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 uri = "mongodb+srv://admin:admin1234@cluster0.eguqpjc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri)
 db = client["violat"]
-collection = db["member"]
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def user_detail(request):
-    print("디테일 들어옴", flush=True)
-    username = request.user.username
-    print("username:",username,flush=True)
-    member = Member.objects.get(username=username)
-    return Response({'username': member.username, 'password': member.pwd})
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
 def login(request):
-    input_id = request.data.get('username')
+    input_id = request.data.get('id') #Login.js const values(id, password)
     input_pwd = request.data.get('password')
     
     print("inputid : ", input_id, flush=True)
@@ -50,7 +36,7 @@ def login(request):
     if not input_id or not input_pwd:
         return Response({'message': 'ID와 비밀번호를 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     
-    #사용자 인증
+    collection = db["member"]
     user = collection.find_one({'id': input_id, 'pwd': input_pwd}, {'_id': 0, 'id': 1, 'pwd': 1})
     print("user : ", user, flush=True)
     if user:
@@ -63,10 +49,7 @@ def login(request):
         #     django_user.set_password(input_pwd)
         #     django_user.save()
         
-        request.session['user_id'] = django_user.id
-        request.session['username'] = input_id
-        
-        auth_user = authenticate(username=input_id, password=input_pwd) #세션 생성
+        auth_user = authenticate(username=input_id, password=input_pwd)
         print("auth_user:",auth_user, flush=True)
         if auth_user is not None:
             print("유저 들어옴",flush=True)
@@ -101,6 +84,8 @@ def signup(request):
     if not username or not password:
       return Response({'success': False, 'message': '아이디와 비밀번호를 입력해주세요.'}, status=400)
 
+    collection = db["member"]
+
     if collection.find_one({'id': username}):
       return Response({'success': False, 'message': '이미 존재하는 아이디입니다.'}, status=400)
     
@@ -134,6 +119,8 @@ def id_check(request):
         username = request.data.get('id')
         if not username:
             return Response({'error': 'ID is required'}, status=400)
+
+        collection = db["member"]
         
         if collection.find_one({'id': username}):
             print("true")
