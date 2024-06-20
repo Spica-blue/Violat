@@ -60,6 +60,8 @@ article .tabB ul li a {
     font-size: 14px;
     width: 490px;
     height: 432px;
+    margin: 0 auto;
+    margin-top: 15px;
 }
 .css_1trmusf > div:first-child {
     padding: 14px 14px 0px;
