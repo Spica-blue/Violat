@@ -14,6 +14,7 @@ import Footer from "./asset/view/Footer";
 import Mypage from './member/Mypage';
 import Sidebar from "./trade/Sidbar";
 import StockChart from "./trade/StockChart";
+import Stock from "./trade/Stock";
 
 
 function App() {
@@ -32,7 +33,8 @@ function App() {
           <Route path='/asset/history' element={<History/>}/>
           <Route path='/asset/rankings' element={<Rankings/>}/>
           <Route path="/member/Mypage" element= {<Mypage/>} />
-          <Route path="/trade/stock/:stockName" element= {<StockChart/>} />
+          {/* <Route path="/trade/stock/:stockName" element= {<StockChart/>} /> */}
+          <Route path="/trade/stock" element={<Stock/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>

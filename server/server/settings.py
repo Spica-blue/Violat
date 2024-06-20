@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'member',
     'trade.apps.TradeConfig',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,8 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # React 앱 도메인
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
 ROOT_URLCONF = 'server.urls'
 

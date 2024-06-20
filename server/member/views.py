@@ -27,7 +27,6 @@ client = MongoClient(uri)
 db = client["violat"]
 
 
-
 @api_view(['POST'])
 def login(request):
     input_id = request.data.get('id') #Login.js const values(id, password)
@@ -43,15 +42,24 @@ def login(request):
     user = collection.find_one({'id': input_id, 'pwd': input_pwd}, {'_id': 0, 'id': 1, 'pwd': 1})
     print("user : ", user, flush=True)
     if user:
+        print("들어옴ㅁㅁㅁㅁㅁ", flush=True)
         django_user, created = User.objects.get_or_create(username=input_id)
+        print("django_user:",django_user, flush=True)
+        print("created:",created, flush=True)
+        print("password:",django_user.check_password(input_pwd), flush=True)
         if created or not django_user.check_password(input_pwd):
             django_user.set_password(input_pwd)
             django_user.save()
         
         auth_user = authenticate(username=input_id, password=input_pwd)
+        print("auth_user:",auth_user, flush=True)
         if auth_user is not None:
+            print("유저 들어옴",flush=True)
             auth_login(request, auth_user)
+            print("auth_login:",auth_login,flush=True)
             refresh = RefreshToken.for_user(auth_user)
+            
+            print("refresh:",refresh,flush=True)
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
