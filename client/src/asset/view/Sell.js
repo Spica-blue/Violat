@@ -79,6 +79,7 @@ export default function Sell({ onTradeComplete }) {
         })
         .then(data => {
             console.log("매도 요청 성공:", data);
+            alert("매도 완료되었습니다.")
             setAvailableSell(prev => prev - parseFloat(quantity));
             setIsLoading(false);
             onTradeComplete(); // 매도 후 상위 컴포넌트에 알림

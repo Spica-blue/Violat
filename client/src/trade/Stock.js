@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import StockChart from "./StockChart";
-import Sidebar from './Sidebar';
 import TradeLog from "../asset/view/TradeLog";
 import styles from "./Stock.module.css";
 import Trade from "./Trade";
+import Sidebar from "./Sidbar";
 
 function Stock() {
-  const { stockName } = useParams(); // Get stockName from URL
-  const [reloadLog, setReloadLog] = useState(false); // reloadLog 상태 추가
+  const { stockName } = useParams();
+  const [reloadLog, setReloadLog] = useState(false);
 
   const handleReloadLog = () => {
     setReloadLog(prev => !prev);
@@ -19,7 +19,7 @@ function Stock() {
   return (
     <div className={styles.display}>
       <div className={styles.sidebar}>
-        <Sidebar />
+        <Sidebar onStockSelect={handleReloadLog} />
       </div>
       <div className={styles.chartContainer}>
         <StockChart stockName={stockName} />

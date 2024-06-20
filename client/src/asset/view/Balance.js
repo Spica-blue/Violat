@@ -2,11 +2,10 @@ import { Link } from "react-router-dom";
 import styles from "../css/Balance.module.css";
 import AssetHeader from "./AssetHeader";
 import { useEffect, useState } from "react";
-// import AssetDistribution from "./AssetDistribution";
 
 export default function Balance() {
-    const [data, setData] = useState({});
-    const [detailData, setDetailData] = useState({});
+    const [data, setData] = useState(null); // 초기 상태를 null로 설정
+    const [detailData, setDetailData] = useState(null); // 초기 상태를 null로 설정
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/balance')
@@ -32,6 +31,10 @@ export default function Balance() {
             });
     }, []);
 
+    if (!data || !detailData) {
+        return <div>Loading...</div>; // 데이터가 로드되기 전에는 로딩 상태 표시
+    }
+
     return (
         <>
             <div className={styles.mainB} style={{margin: "0px auto"}}>
@@ -48,7 +51,7 @@ export default function Balance() {
                                             </dt>
                                             <dd className={styles.TradeAmount__CountCell}>
                                                 <span className={styles.TradeAmount__count}>
-                                                    {data.deposit}<i className={styles.TradeAmount__unit}>KRW</i>
+                                                    {detailData.deposit}<i className={styles.TradeAmount__unit}>KRW</i>
                                                 </span>
                                             </dd>
                                         </dl>
