@@ -1,16 +1,13 @@
 /* src/header/Header.module.css */
 
-.h1{
+.h1 {
   font-size: 2rem;
   color: white;
 }
 
-.logoImg{
-  position: absolute;
+.logoImg {
   width: 3.5rem;
-  top: 0;
-  margin-top: 5px;
-  margin-left: 2rem;
+  margin: 5px 1rem;
 }
 
 .header {
@@ -19,7 +16,7 @@
   align-items: center;
   background-color: #CFD0D4;
   height: 4rem;
-  color: black;
+  padding: 0 3rem;
 }
 
 .list {
@@ -28,13 +25,19 @@
   align-items: center;
 }
 
-.row{
+.row {
   font-size: 15px;
-  margin: 0 40px
+  margin: 0 40px;
 }
 
+.investment {
+  margin: 0 20px;
+  font-size: 1rem;
+  text-decoration: none;
+  color: black;
+}
 
-.investment:hover{
+.investment:hover {
   font-weight: bolder;
   cursor: pointer;
 }
@@ -42,7 +45,6 @@
 .userSection {
   display: flex;
   align-items: center;
-  width: 200px;
 }
 
 .user {
@@ -51,28 +53,25 @@
 }
 
 .button {
-  width: 80px;
-  height: 2rem;
-  background-color: rgb(161, 222, 247);
+  background-color: rgb(117, 201, 235);
   color: white;
+  width: 80px;
+  height: 25px;
   border: none;
-  border-radius: 7px;
+  border-radius: 3px;
+  margin-right: 20px;
 }
 
-.button:hover{
-  background-color: aqua;
+.button:hover {
+  background-color: rgb(148, 215, 241);
 }
 
 .stateLogin {
   font-size: large;
-  margin-left: 20px;
-  margin-right: 20px;
+  color: black;
 }
 
 .userImg { 
-  position: absolute;
-  top: 0;
-  right: 60px;
   width: 4rem;
-  /* background-color: rgb(153, 153, 153); */
+  cursor: pointer;
 }

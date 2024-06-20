@@ -12,13 +12,14 @@ function SignUp() {
   const [confirmError, setConfirmError] = useState('');
   const [isIdCheck, setIsIdCheck] = useState(false);
   const [isIdAvailable, setIsIdAvailable] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+  const IDCHECK_URL = 'http://127.0.0.1:8000/api/id_check/';
+  const SIGNUP_URL = 'http://127.0.0.1:8000/api/signup/';
 
   const onChangeIdHandler = (e) => {
     const idValue = e.target.value;
     setId(idValue);
-    // console.log("id:",idValue)
+    console.log("id:",idValue)
     idCheckHandler(idValue);
   }
 
@@ -35,23 +36,23 @@ function SignUp() {
 
   const idCheckHandler = async (id) => {
     const idRegex = /^[a-z\d!@*&-_]{5,16}$/;
-    // console.log("id체크:",idRegex.test(id));
+    console.log("id체크:",idRegex.test(id));
     if (id === '') {
       setIdError('아이디를 입력해주세요.');
       setIsIdAvailable(false);
       return false;
     }
     try {
-      // console.log("들어옴")
-      const response = await axios.post('http://127.0.0.1:8000/api/id_check/', { id });
-      // console.log("response:",response.data.exists)
+      console.log("들어옴")
+      const response = await axios.post(IDCHECK_URL, { id });
+      console.log("response:",response.data.exists)
       if (response.data.exists) {
         setIdError('이미 사용중인 아이디입니다.');
         setIsIdCheck(false);
         setIsIdAvailable(false);
         return false;
       } else {
-        // console.log("확인:",idRegex.test(id))
+        console.log("확인:",idRegex.test(id))
         if (!idRegex.test(id)){
           setIdError('아이디는 5~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
           setIsIdCheck(false);
@@ -110,19 +111,36 @@ function SignUp() {
     
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password, confirm });
-      if (response.data.success) {
-        localStorage.setItem('loginId', id);
-        alert('회원가입이 완료되었습니다')
-        navigate('/member/login');
-      } else {
-        alert(response.data.message || '회원가입에 실패하였습니다. 다시 시도해주세요.');
+      const signupResponse = await axios.post('http://127.0.0.1:8000/member/signup/', { id, password }, {
+        withCredentials: true,
+      });
+      if (signupResponse.data.success) {
+        // 회원가입 성공 후 자동 로그인 처리
+        try {
+          const loginResponse = await axios.post('http://127.0.0.1:8000/member/login/', { username: id, password }, {
+            withCredentials: true,
+          });
+          if (loginResponse.status === 200) {
+            alert('회원가입이 완료되었습니다');
+            navigate('/member/login');
+          } else {
+            alert('회원가입에 실패하였습니다. 다시 시도해주세요.1');
+            console.log("실패1");
+          }
+        } catch (error) {
+          alert('회원가입에 실패하였습니다. 다시 시도해주세요.2');
+          console.log("실패2");
+          console.error(error);
+        }
+      } else{
+        alert(signupResponse.data.message || '회원가입 실패2.5')
       }
-    } catch (error) {
-      alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+    } catch(error){
+      alert('회원가입 실패3');
+      console.log("실패3");
       console.error(error);
     }
-  }
+  };
 
   return (
     <>
