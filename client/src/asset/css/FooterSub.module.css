@@ -1,4 +1,5 @@
-.body{
-    height: calc(100vh - 4rem);
-    background-color: red;
+.list{
+  height: calc(100vh - 4rem);
+  margin: 10px;
+  font-size: large;
 }
