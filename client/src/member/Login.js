@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 function Login() {
   const [values, setValues] = useState({
-    id: '',
+    username: '',
     password: '',
   });
 
@@ -25,13 +25,13 @@ function Login() {
     console.log("값:",values)
     e.preventDefault();
     try {
-      const response = await axios.post(API_URL, values);
+      const response = await axios.post(API_URL, values,{
+        withCredentials:true, //session
+      });
       console.log('로그인 성공:', response.data);
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
       alert("로그인 성공");
 
-      setValues({ id: '', password: '' }); //리디렉트
+      setValues({ username: '', password: '' }); //리디렉트
       setError(null);
 
       navigate('/'); // 로그인 성공 시 메인 페이지로 이동
@@ -53,9 +53,9 @@ function Login() {
                 <input
                   type="text"
                   id="id"
-                  name="id"
+                  name="username"
                   placeholder="아이디를 입력하세요"
-                  value={values.id}
+                  value={values.username}
                   onChange={handleChange}
                   className={styles.input}
                   required
@@ -65,13 +65,13 @@ function Login() {
                 <label htmlFor="password">비밀번호:</label>
                 <input
                   type="password"
-                  id="password"
+                  id="password" //??
                   name="password"
                   placeholder="비밀번호를 입력하세요"
                   value={values.password}
                   onChange={handleChange}
                   className={styles.input}
-                  required
+                  required //?????
                 />
               </div>
               {error && <p className={styles.error}>{error}</p>}<br/>

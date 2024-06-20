@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
+    'django.contrib.sessions', #session
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS 추가
     'django.middleware.common.CommonMiddleware',  # CORS 추가
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', #session
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -61,16 +61,34 @@ MIDDLEWARE = [
 ]
 
 
-CORS_ORIGIN_ALLOW_ALL = True #모든 도메인 허용
-CORS_ALLOW_CREDENTIALS = True
-# ---------------------
-
-
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # React 앱 도메인
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True  # 보안 설정을 위해 특정 도메인만 허용하는 것이 좋습니다
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # 클라이언트 도메인 추가
+]
+
+# CORS 헤더 설정
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'accept',
+    'origin',
+    'x-csrftoken',
+]
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+
+# 세션 쿠키 설정
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False  # HTTPS를 사용할 경우 True로 설정
+SESSION_COOKIE_SAMESITE = 'None'  # 'Strict', 'Lax', 'None' 중 선택
+
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SAMESITE = 'None'
 
 ROOT_URLCONF = 'server.urls'
 

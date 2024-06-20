@@ -10,16 +10,17 @@
   width: 3.5rem;
   top: 0;
   margin-top: 5px;
-  margin-left: 2rem;
+  margin-left: 1rem;
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   background-color: #CFD0D4;
   height: 4rem;
   color: black;
+  /* padding: 0 1rem; */
 }
 
 .list {
@@ -51,28 +52,21 @@
 }
 
 .button {
-  width: 80px;
-  height: 2rem;
-  background-color: rgb(161, 222, 247);
-  color: white;
-  border: none;
-  border-radius: 7px;
-}
-
-.button:hover{
-  background-color: aqua;
+  background-color: skyblue;
+  border-radius: 3px;
 }
 
 .stateLogin {
   font-size: large;
   margin-left: 20px;
+  color: blue;
   margin-right: 20px;
 }
 
 .userImg { 
   position: absolute;
   top: 0;
-  right: 60px;
+  right: 20px;
   width: 4rem;
   /* background-color: rgb(153, 153, 153); */
 }
