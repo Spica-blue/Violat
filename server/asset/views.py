@@ -15,6 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+
 # from django.views.decorators.csrf import ensure_csrf_cookie
 # from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -42,7 +43,41 @@ class BalanceView(View):
 
     def post(self, request):
         return JsonResponse({'message': 'POST request not implemented'}, status=405)
+    
+@csrf_exempt
+def detail_balance(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        account_num = data.get('account_num')
+        
+        account = db['account']
+        position = db['position']
 
+        account_result = account.find_one({'account_num': account_num}, {'_id': 0, 'account_num': 1, 'deposit': 1, 'deposit_limit': 1})
+        position_result = list(position.find({'account_num': account_num}, {'_id': 0, 'account_num': 1, 'stock_code': 1, 'stock_quantity': 1, 'average_price': 1}))
+
+        total_buy = round(sum(p['stock_quantity'] * p['average_price'] for p in position_result))
+        # Assuming that current_price is obtained from an external service
+        total_eval = round(sum(p['stock_quantity'] * get_current_price(p['stock_code']) for p in position_result))
+        total_profit_loss = round(total_eval - total_buy)
+        total_profit_loss_rate = round((total_profit_loss / total_buy) * 100) if total_buy != 0 else 0
+
+        account_result['total_buy'] = total_buy
+        account_result['total_profit_loss'] = total_profit_loss
+        account_result['total_eval'] = total_eval
+        account_result['total_profit_loss_rate'] = total_profit_loss_rate
+
+        # Round deposit and deposit_limit as well
+        account_result['deposit'] = round(account_result['deposit'])
+        account_result['deposit_limit'] = round(account_result['deposit_limit'])
+
+        return JsonResponse(account_result, safe=False)
+
+def get_current_price(stock_code):
+    # Dummy implementation, replace with actual logic to get the current price
+    return 100  # Placeholder value
+
+        
 
 class RankingsView(View):
     csv_file_path = './asset/stock_data.csv'
@@ -208,14 +243,66 @@ def sell_stock(request):
         try:
             data = json.loads(request.body)
             logger.info(f"Received sell stock request: {data}")
-            collection = db['trade']
-            # result = collection.update()
-            # logger.info(f"Stock bought successfully: {result.inserted_id}")
+            
+            trade = db['trade']
+            account = db['account']
+            position = db['position']
+            
+            stock_code = data.get('stock_code')
+            buy_or_sell = data.get('buy_or_sell')
+            trade_quantity = data.get('trade_quantity')
+            trade_price = data.get('trade_price')
+            order_price = data.get('order_price')
+            account_num = data.get('account_num')
+            
+            # order_price와 trade_quantity가 숫자 형식인지 확인하고 변환
+            if isinstance(order_price, str):
+                order_price = float(order_price)
+            if isinstance(trade_quantity, str):
+                trade_quantity = int(trade_quantity)
+            if isinstance(trade_price, str):
+                trade_price = float(trade_price)
+            
+            # Account 컬렉션에서 account_num을 기준으로 deposit 값을 업데이트
+            result = account.update_one(
+                {"account_num": account_num}, 
+                {"$inc": {"deposit": order_price}}
+            )
+            
+            if result.modified_count == 0:
+                return JsonResponse({"error": "Account not found or deposit not updated"}, status=400)
+            
+            # trade_time 필드에 현재 시간 추가
+            data['trade_time'] = datetime.now()
+            
+            if buy_or_sell == '매도':
+                # 포지션 업데이트 로직
+                pos = position.find_one({"stock_code": stock_code, "account_num": account_num})
+                
+                if pos and pos.get('stock_quantity', 0) >= trade_quantity:
+                    new_quantity = pos['stock_quantity'] - trade_quantity
+                    new_average_price = pos['average_price']  # 매도 시 평균 매수가를 변경하지 않음
+                    
+                    if new_quantity > 0:
+                        position.update_one(
+                            {"stock_code": stock_code, "account_num": account_num},
+                            {"$set": {"stock_quantity": new_quantity, "average_price": new_average_price}}
+                        )
+                    else:
+                        position.delete_one({"stock_code": stock_code, "account_num": account_num})
+                else:
+                    return JsonResponse({"error": "Insufficient stock quantity"}, status=400)
+                
+            # trade 컬렉션에 데이터 삽입
+            result = trade.insert_one(data)
+            logger.info(f"Stock sold successfully: {result.inserted_id}")
 
-            return JsonResponse({"message": "Stock bought successfully!"})
+            return JsonResponse({"message": "Stock sold successfully!"})
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
+        except ValueError:
+            return JsonResponse({"error": "Invalid numeric value"}, status=400)
     
     return JsonResponse({"error": "Invalid request"}, status=400)
 
@@ -231,6 +318,114 @@ class TradeLogView(View):
             data_list.append(item)
         
         return JsonResponse(data_list, safe=False)
+    
+@csrf_exempt
+def avail_sell(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        stock_code = data.get('stock_code')
+        account_num = data.get('account_num')
+        position = db['position']
+        
+        result = position.find_one(
+            {"account_num": "1111", "stock_code": stock_code}, 
+            {'_id': 0, 'account_num': 1, 'stock_quantity': 1}
+        )
+        return JsonResponse(result, safe=False)
+    
+@csrf_exempt
+def sell_stock(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            logger.info(f"Received sell stock request: {data}")
+            
+            trade = db['trade']
+            account = db['account']
+            position = db['position']
+            
+            stock_code = data.get('stock_code')
+            buy_or_sell = data.get('buy_or_sell')
+            trade_quantity = data.get('trade_quantity')
+            trade_price = data.get('trade_price')
+            order_price = data.get('order_price')
+            account_num = data.get('account_num')
+            
+            # order_price와 trade_quantity가 숫자 형식인지 확인하고 변환
+            if isinstance(order_price, str):
+                order_price = float(order_price)
+            if isinstance(trade_quantity, str):
+                trade_quantity = int(trade_quantity)
+            if isinstance(trade_price, str):
+                trade_price = float(trade_price)
+            
+            # Account 컬렉션에서 account_num을 기준으로 deposit 값을 업데이트
+            result = account.update_one(
+                {"account_num": account_num}, 
+                {"$inc": {"deposit": order_price}}
+            )
+            
+            if result.modified_count == 0:
+                return JsonResponse({"error": "Account not found or deposit not updated"}, status=400)
+            
+            # trade_time 필드에 현재 시간 추가
+            data['trade_time'] = datetime.now()
+            
+            if buy_or_sell == '매도':
+                # 포지션 업데이트 로직
+                pos = position.find_one({"stock_code": stock_code, "account_num": account_num})
+                
+                if pos and pos.get('stock_quantity', 0) >= trade_quantity:
+                    new_quantity = pos['stock_quantity'] - trade_quantity
+                    new_average_price = pos['average_price']  # 매도 시 평균 매수가를 변경하지 않음
+                    
+                    if new_quantity > 0:
+                        position.update_one(
+                            {"stock_code": stock_code, "account_num": account_num},
+                            {"$set": {"stock_quantity": new_quantity, "average_price": new_average_price}}
+                        )
+                    else:
+                        position.delete_one({"stock_code": stock_code, "account_num": account_num})
+                else:
+                    return JsonResponse({"error": "Insufficient stock quantity"}, status=400)
+                
+            # trade 컬렉션에 데이터 삽입
+            result = trade.insert_one(data)
+            logger.info(f"Stock sold successfully: {result.inserted_id}")
+
+            return JsonResponse({"message": "Stock sold successfully!"})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        except ValueError:
+            return JsonResponse({"error": "Invalid numeric value"}, status=400)
+    
+    return JsonResponse({"error": "Invalid request"}, status=400) 
+
+# class AssetDistributionView(View):
+#     def get(self, request, account_num):
+#         try:
+#             positions = Position.objects.filter(account_num__account_num=account_num)
+#             data = []
+#             total_value = positions.aggregate(total=Sum(F('stock_quantity') * F('average_price')))['total'] or 0
+            
+#             for position in positions:
+#                 stock_value = position.stock_quantity * position.average_price
+#                 stock_percentage = (stock_value / total_value) * 100 if total_value else 0
+#                 data.append({
+#                     'stock_code': position.stock_code,
+#                     'stock_quantity': position.stock_quantity,
+#                     'average_price': position.average_price,
+#                     'stock_value': stock_value,
+#                     'stock_percentage': stock_percentage
+#                 })
+            
+#             return JsonResponse(data, safe=False)
+        
+#         except Exception as e:
+#             logger.error(f"Error in AssetDistributionView: {e}")
+#             return JsonResponse({'error': 'Something went wrong', 'details': str(e)}, status=500)
+
 
 
 def update_stock_data_periodically():

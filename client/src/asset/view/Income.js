@@ -31,7 +31,7 @@ export default function Income() {
                                                 </div>
                                             </div>
                                             <div className={styles.css_0}>
-                                                <div tabindex="-1" className={styles.css_1x6qg29}>
+                                                <div tabIndex="-1" className={styles.css_1x6qg29}>
                                                     <div className={styles.css_1f136nj}>
                                                         <div className={styles.css_1d3w5wq}>2024년 6월</div>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="9" height="18" className={styles.css_1cq4azn}>
@@ -173,10 +173,10 @@ export default function Income() {
                                             <tbody>
                                                 <tr>
                                                     <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
                                                     <td>0</td>
                                                     <td>0</td>
                                                     <td>0</td>
@@ -184,10 +184,10 @@ export default function Income() {
                                                 </tr>
                                                 <tr>
                                                     <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
                                                     <td>0</td>
                                                     <td>0</td>
                                                     <td>0</td>
@@ -195,10 +195,10 @@ export default function Income() {
                                                 </tr>
                                                 <tr>
                                                     <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
                                                     <td>0</td>
                                                     <td>0</td>
                                                     <td>0</td>
@@ -206,10 +206,10 @@ export default function Income() {
                                                 </tr>
                                                 <tr>
                                                     <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
                                                     <td>0</td>
                                                     <td>0</td>
                                                     <td>0</td>
@@ -217,186 +217,10 @@ export default function Income() {
                                                 </tr>
                                                 <tr>
                                                     <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.14</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.13</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>06.12</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
-                                                    <td class="">0</td>
-                                                    <td class="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
+                                                    <td className="">0</td>
+                                                    <td className="">0.00%</td>
                                                     <td>0</td>
                                                     <td>0</td>
                                                     <td>0</td>

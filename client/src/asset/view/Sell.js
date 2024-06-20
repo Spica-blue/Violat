@@ -2,38 +2,45 @@ import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
 
 export default function Sell() {
-    const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [stockCode, setStockCode] = useState('');
     const [quantity, setQuantity] = useState('');
     const [price, setPrice] = useState('');
     const [totalAmount, setTotalAmount] = useState('');
-    const [availableBalance, setAvailableBalance] = useState(0);
+    const [availableSell, setAvailableSell] = useState(0);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/asset/balance/', {
+        const requestBody = {
+            stock_code: stockCode,
+            account_num: "1111",
+        };
+        
+        fetch('http://127.0.0.1:8000/asset/availSell/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
         })
         .then(res => res.json())
         .then(data => {
-            setData(data);
-            if (data.length > 0) {
-                setAvailableBalance(data[0].deposit); // Assuming there's at least one account and we're interested in the first one
-            }
+            console.log(data.stock_quantity);
+            setAvailableSell(data.stock_quantity);
             console.log(data);
         });
-    }, []);
+    }, [stockCode]); // stockCode가 변경될 때마다 availableSell을 업데이트
 
     useEffect(() => {
         const qty = parseFloat(quantity) || 0;
         const prc = parseFloat(price) || 0;
-        setTotalAmount((qty * prc).toFixed(2)); // 소수점 둘째 자리까지 표시
+        setTotalAmount(qty * prc);
     }, [quantity, price]);
 
-    function buyStock(e) {
+    function sellStock(e) {
         e.preventDefault();
 
-        if (parseFloat(totalAmount) > parseFloat(availableBalance)) {
-            alert('주문 총액이 주문 가능 금액보다 많습니다.');
+        if (parseFloat(quantity) > parseFloat(availableSell)) {
+            alert('주문 수량이 매도 가능 수량보다 많습니다.');
             return;
         }
 
@@ -45,7 +52,7 @@ export default function Sell() {
             trade_quantity: quantity,
             trade_price: price,
             order_price: totalAmount,
-            account: data[0].account_num,
+            account_num: "1111",
         };
 
         fetch('http://127.0.0.1:8000/asset/sellStock/', {
@@ -63,6 +70,8 @@ export default function Sell() {
         })
         .then(data => {
             console.log("매도 요청 성공:", data);
+            // 매도 가능한 수량 업데이트
+            setAvailableSell(prev => prev - parseFloat(quantity));
             setIsLoading(false);
         })
         .catch(error => {
@@ -74,23 +83,22 @@ export default function Sell() {
     return (
         <>
             <article>
-                <form onSubmit={buyStock}>
+                <TradeHeader/>
+                <form onSubmit={sellStock}>
                     <div className={styles.css_1trmusf}>
                         <div className={styles.css_ofkx68}>
-                            {data.map(item => (
-                                <div className={styles.css_1baek4h} key={item.account_num}>
-                                    <div className={styles.css_13ik8ss}>
-                                        <div className={styles.css_0}>주문가능</div>
-                                        <div className={styles.css_yiipgb}>
-                                            <span className={styles.css_1go6adv}>{item.deposit}</span>
-                                            <span className={styles.css_vzydk5}>KRW</span>
-                                        </div>
-                                    </div>
-                                    <div className={styles.css_1eeh8ox}>
-                                        <div className={styles.css_0}></div>
+                            <div className={styles.css_1baek4h}>
+                                <div className={styles.css_13ik8ss}>
+                                    <div className={styles.css_0}>매도가능수량</div>
+                                    <div className={styles.css_yiipgb}>
+                                        <span className={styles.css_1go6adv}>{availableSell}</span>
+                                        <span className={styles.css_vzydk5}>주</span>
                                     </div>
                                 </div>
-                            ))}
+                                <div className={styles.css_1eeh8ox}>
+                                    <div className={styles.css_0}></div>
+                                </div>
+                            </div>
                             <div className={styles.css_ilfvon}>
                                 <div className={styles.css_0}>매도가격 <span className={styles.css_1nodk1f}>(KRW)</span></div>
                                 <div className={styles.css_0}>
@@ -104,12 +112,12 @@ export default function Sell() {
                                                 onChange={(e) => setPrice(e.target.value)}
                                             />
                                             <div>
-                                                <button type="button" title="-" onClick={() => setPrice(prev => Math.max(0, Number(prev) - 1).toString())}>
+                                                <button type="button" title="-" onClick={() => setPrice(prev => Math.max(0, Number(prev) - 1000).toString())}>-
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" className={styles.css_11uuyrb}>
                                                         <use href="#ic_calc_minus"></use>
                                                     </svg>
                                                 </button>
-                                                <button type="button" title="+" onClick={() => setPrice(prev => (Number(prev) + 1).toString())}>
+                                                <button type="button" title="+" onClick={() => setPrice(prev => (Number(prev) + 1000).toString())}>+
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" className={styles.css_11uuyrb}>
                                                         <use href="#ic_calc_plus"></use>
                                                     </svg>
@@ -121,7 +129,7 @@ export default function Sell() {
                             </div>
                             <div className={styles.css_1b0sg9n}>
                                 <div className={styles.css_1usmpz}>
-                                    <div className={styles.css_0}>주문수량 <span className={styles.css_1culj3u}>(BTC)</span></div>
+                                    <div className={styles.css_0}>주문수량 <span className={styles.css_1culj3u}></span></div>
                                     <div className={styles.css_ihz6y5}>
                                         <div className={styles.css_4mteuk}>
                                             <input
@@ -148,7 +156,7 @@ export default function Sell() {
                                 </div>
                             </div>
                             <div className={styles.css_17qq1r}>
-                                <div className={styles.css_0}>주문총액 <span className={styles.css_1culj3u}>(KRW)</span></div>
+                                <div className={styles.css_0}>금액 <span className={styles.css_1culj3u}>(KRW)</span></div>
                                 <div className={styles.css_ihz6y5}>
                                     <div className={styles.css_4mteuk}>
                                         <input
