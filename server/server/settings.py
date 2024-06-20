@@ -141,6 +141,13 @@ DATABASES = {
         }
 }
 
+# session setting
+# 클라이언트가 웹 브라우저를 close 시 세션 데이터 삭제 (default : False)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# 세션 쿠키 데이터의 시간(sec)을 지정하는 설정 (default : 1209600 (2주))
+SESSION_COOKIE_AGE = 180
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 

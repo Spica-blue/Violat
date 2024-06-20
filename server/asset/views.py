@@ -15,6 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from pymongo import DESCENDING
 
 # from django.views.decorators.csrf import ensure_csrf_cookie
 # from django.utils.decorators import method_decorator
@@ -310,7 +311,10 @@ class TradeLogView(View):
     def get(self, request):
         trade = db['trade']
         # 필요한 모든 필드를 포함하여 결과를 반환
-        result = trade.find({"account_num": "1111"}, {'_id': 0, 'account_num': 1, 'stock_code': 1, 'buy_or_sell': 1, 'trade_quantity': 1, 'trade_price': 1, 'order_price': 1, 'trade_time': 1})
+        result = trade.find(
+            {"account_num": "1111"},
+            {'_id': 0, 'account_num': 1, 'stock_code': 1, 'buy_or_sell': 1, 'trade_quantity': 1, 'trade_price': 1, 'order_price': 1, 'trade_time': 1}
+        ).sort('trade_time', DESCENDING)
         
         data_list = []
         for item in result:
