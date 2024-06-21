@@ -20,9 +20,7 @@ function Mypage() {
   const clickedHandler = async () =>{
     try{
       console.log("들어옴");
-      // const response = await axios.delete(DELETE_URL, {
-      //   headers: { Authorization: `Bearer ${window.sessionStorage.getItem('sessionid')}` }
-      // });
+
       const response = await axios.delete(DELETE_URL, {
         data: { user_id: userId }
       });
@@ -39,13 +37,13 @@ function Mypage() {
 
   const checkLoginStatus = async () => {
     try {
-      console("마이페이지1테스트")
+      console.log("마이페이지1테스트")
       const sessionId = window.sessionStorage.getItem("sessionid");
       const sessionAccount = window.sessionStorage.getItem("sessionaccount");
       if (sessionId) {
         setUserId(sessionId);
         setAccount(sessionAccount);
-        console("마이페이지account확인",sessionAccount)
+        console.log("마이페이지account확인",sessionAccount)
       } 
     } catch (error) {
       console.error('로그인 상태 확인 실패:', error);
