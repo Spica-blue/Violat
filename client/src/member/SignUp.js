@@ -107,12 +107,13 @@ function SignUp() {
       return;
     }
 
-    
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password, confirm });
       if (response.data.success) {
+        const accountNum = response.data.account_num;
         localStorage.setItem('loginId', id);
+        localStorage.setItem('loginAccount', accountNum)
         alert('회원가입이 완료되었습니다')
         navigate('/member/login');
       } else {

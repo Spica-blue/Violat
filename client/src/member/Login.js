@@ -32,7 +32,9 @@ function Login() {
       if(response.data.message === "로그인 성공"){
         console.log("if문 들어옴");
         alert("로그인 성공");
+        const accountNum = response.data.account_num;
         window.sessionStorage.setItem("sessionid", values.id)
+        localStorage.setItem('loginAccount', accountNum)
         setError(null);
         navigate('/'); // 로그인 성공 시 메인 페이지로 이동
         window.location.reload();
