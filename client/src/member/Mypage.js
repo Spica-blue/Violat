@@ -17,6 +17,8 @@ function Mypage() {
     window.location.reload();
   };
 
+  
+
   const clickedHandler = async () =>{
     try{
       console.log("들어옴");
@@ -39,7 +41,9 @@ function Mypage() {
     try {
       console.log("마이페이지1테스트")
       const sessionId = window.sessionStorage.getItem("sessionid");
-      const sessionAccount = window.sessionStorage.getItem("sessionaccount");
+      console.log("세션값:",sessionId)
+      const sessionAccount = localStorage.getItem("loginAccount");
+      console.log("세션값2:",sessionAccount)
       if (sessionId) {
         setUserId(sessionId);
         setAccount(sessionAccount);

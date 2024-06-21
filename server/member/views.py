@@ -107,6 +107,7 @@ def signup(request):
     return Response({
       'success': True,
       'message': '회원가입이 성공적으로 완료되었습니다.',
+      'account_num': account_number
     }, status=201)
   except Exception as e:
     print(f"에러에러: {str(e)}")
@@ -154,3 +155,10 @@ def deleteUser(request):
         print("오류")
         return Response({'message' : '회원탈퇴 처리 중 오류 발생', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def account(request):
+  print("account back", request.user.username)
+  
+
+  
