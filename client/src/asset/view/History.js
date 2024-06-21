@@ -139,11 +139,11 @@ export default function History() {
                                                         <td className={styles.AmountTable__cell}>{log.coin}</td>
                                                         <td className={styles.AmountTable__cell}>{log.market}</td>
                                                         <td className={styles.AmountTable__cell}>{log.type}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.quantity.toFixed(1)}</td>
+                                                        {/* <td className={styles.AmountTable__cell}>{log.quantity.toFixed(1)}</td>
                                                         <td className={styles.AmountTable__cell}>{log.price.toFixed(1)}</td>
                                                         <td className={styles.AmountTable__cell}>{log.amount.toFixed(1)}</td>
                                                         <td className={styles.AmountTable__cell}>{log.fee.toFixed(1)}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.settlement_amount.toFixed(1)}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.settlement_amount.toFixed(1)}</td> */}
                                                         <td className={styles.AmountTable__cell}>{formatDate(log.order_time)}</td>
                                                     </tr>
                                                 ))
