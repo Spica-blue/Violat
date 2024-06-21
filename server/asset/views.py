@@ -30,24 +30,37 @@ db = client["violat"]
 class BalanceView(View):
     def get(self, request):
         collection = db['account']
-        
         # 모든 문서를 가져오고 필요한 필드만 선택
-        result = collection.find({'account_num': '1111'}, {'_id': 0, 'account_num': 1, 'deposit': 1, 'deposit_limit': 1})
+        # result = collection.find({'account_num': '1111'}, {'_id': 0, 'account_num': 1, 'deposit': 1, 'deposit_limit': 1})
         
-        # _id 필드를 문자열로 변환하여 JSON 직렬화 가능하도록 함
+        # # _id 필드를 문자열로 변환하여 JSON 직렬화 가능하도록 함
+        # data_list = []
+        # for item in result:
+        #     item['account_num'] = str(item['account_num'])
+        #     data_list.append(item)
+        
+        return JsonResponse({''}, safe=False)
+
+    @csrf_exempt
+    def post(request):
+        position = db['position']
+        result = position.find(
+            {"account_num": "1111"},
+            {'_id': 0, 'account_num': 1, 'stock_code': 1, 'buy_or_sell': 1, 'trade_quantity': 1, 'trade_price': 1, 'order_price': 1, 'trade_time': 1}
+        ).sort('trade_time', DESCENDING)
+        
         data_list = []
         for item in result:
             item['account_num'] = str(item['account_num'])
             data_list.append(item)
-        
-        return JsonResponse(data_list, safe=False)
-
-    def post(self, request):
+            
         return JsonResponse({'message': 'POST request not implemented'}, status=405)
+    
     
 @csrf_exempt
 def detail_balance(request):
     if request.method == 'POST':
+        
         data = json.loads(request.body)
         account_num = data.get('account_num')
         
@@ -405,6 +418,48 @@ def sell_stock(request):
             return JsonResponse({"error": "Invalid numeric value"}, status=400)
     
     return JsonResponse({"error": "Invalid request"}, status=400) 
+
+@csrf_exempt
+def get_account(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        sessionId = data.get('sessionId')
+        member = db['member']
+        
+        result = member.find_one({"id": sessionId})
+        
+        logger.info("result: " + str(result))
+        account_num = result.get('account_num')
+        
+        if result:
+            account_num = result.get('account_num')
+            return JsonResponse({"account_num": account_num})
+        else:
+            return JsonResponse({"status": 200})
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def inde_trade_log(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        account_num = data.get('account_num')  # session_id가 아닌 account_num으로 수정
+        trade = db['trade']
+        # 필요한 모든 필드를 포함하여 결과를 반환
+        result = trade.find(
+            {"account_num": account_num},
+            {'_id': 0, 'account_num': 1, 'stock_code': 1, 'buy_or_sell': 1, 'trade_quantity': 1, 'trade_price': 1, 'order_price': 1, 'trade_time': 1}
+        ).sort('trade_time', DESCENDING)
+        
+        data_list = []
+        for item in result:
+            item['account_num'] = str(item['account_num'])
+            data_list.append(item)
+        print("sljflskdjflsjdflkjjklsjflks")
+        logger.info("sljflskdjfl")
+        return JsonResponse(data_list, safe=False)
+        
+    
 
 # class AssetDistributionView(View):
 #     def get(self, request, account_num):

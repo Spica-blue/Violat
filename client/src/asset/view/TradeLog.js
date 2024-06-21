@@ -1,17 +1,26 @@
 import { useEffect, useState } from 'react';
 import styles from '../css/TradeLog.module.css';
 
-export default function TradeLog() {
+export default function TradeLog({ reloadLog }) {
     const [logData, setLogData] = useState([]);
+    const sessionId = window.sessionStorage.getItem("sessionid");
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/tradeLog')
-            .then(res => res.json())
-            .then(data => {
+        .then(res => res.json())
+        .then(data => {
+            if (data !== undefined) {
                 setLogData(data);
-                console.log(data);
-            });
-    }, []);
+            } else {
+                console.error('Unexpected response:', data);
+                setLogData([]);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching trade log:', error);
+            setLogData([]); // 기본값 설정
+        });
+    }, [reloadLog]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -42,8 +51,9 @@ export default function TradeLog() {
                             <table>
                                 <colgroup>
                                     <col width="150px" />
-                                    <col width="90px" />
-                                    <col width="70px" />
+                                    <col width="170px" />
+                                    <col width="100px" />
+                                    <col width="120px" />
                                     <col />
                                     <col width="64px" />
                                 </colgroup>
@@ -63,27 +73,32 @@ export default function TradeLog() {
                             <table>
                                 <colgroup>
                                     <col width="150px" />
-                                    <col width="90px" />
-                                    <col width="70px" />
+                                    <col width="170px" />
+                                    <col width="80px" />
+                                    <col width="120px" />
                                     <col />
                                     <col width="64px" />
                                 </colgroup>
                                 <tbody>
-                                    {/* <tr>
-                                        <td colSpan="5" className={styles.ExHistoryTable__Empty}>
-                                            <span className={styles.ExHistoryTable__EmptyText}>미체결 내역이 없습니다.</span>
-                                        </td>
-                                    </tr> */}
-                                    {logData.map((items, index) => (
-                                        <tr key={index}>
-                                            <td>{formatDate(items.trade_time)}</td>
-                                            <td>{items.stock_code}</td>
-                                            <td>{items.buy_or_sell}</td>
-                                            <td>{items.order_price}</td>
-                                            <td>{items.trade_price}</td>
-                                            <td>{items.trade_quantity}</td>
-                                        </tr>
-                                    ))}
+                                    {sessionId ? (
+                                        logData.map((items, index) => (
+                                            <tr key={index}>
+                                                <td>{formatDate(items.trade_time)}</td>
+                                                <td>{items.stock_code}</td>
+                                                <td>{items.buy_or_sell}</td>
+                                                <td>{items.order_price}</td>
+                                                <td>{items.trade_price}</td>
+                                                <td>{items.trade_quantity}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <div style={{    
+                                            position: 'absolute',
+                                            top: '250px',
+                                            left: '36%'}}>
+                                            로그인시 이용가능합니다.
+                                        </div>
+                                    )}
                                 </tbody>
                             </table>
                         </div>

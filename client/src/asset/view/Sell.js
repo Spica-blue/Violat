@@ -1,8 +1,8 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from '../css/Buy.module.css';
 import { useEffect, useState } from 'react';
 
-export default function Sell() {
+export default function Sell({ onTradeComplete }) {
     const { stockName } = useParams(); // Get stockName from URL
     const [isLoading, setIsLoading] = useState(false);
     const [stockCode, setStockCode] = useState(stockName);
@@ -10,13 +10,15 @@ export default function Sell() {
     const [price, setPrice] = useState('');
     const [totalAmount, setTotalAmount] = useState('');
     const [availableSell, setAvailableSell] = useState(0);
+    const navigate = useNavigate();
+    const sessionId = window.sessionStorage.getItem("sessionid");
 
     useEffect(() => {
         const requestBody = {
             stock_code: stockCode,
             account_num: "1111",
         };
-        
+
         fetch('http://127.0.0.1:8000/asset/availSell/', {
             method: 'POST',
             headers: {
@@ -26,11 +28,18 @@ export default function Sell() {
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data.stock_quantity);
-            setAvailableSell(data.stock_quantity);
-            console.log(data);
+            if (data && data.stock_quantity !== undefined) {
+                setAvailableSell(data.stock_quantity);
+            } else {
+                console.error('Unexpected response:', data);
+                setAvailableSell(0);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching available sell quantity:', error);
+            setAvailableSell(0); // 기본값 설정
         });
-    }, [stockCode]); // stockCode가 변경될 때마다 availableSell을 업데이트
+    }, [stockCode]);
 
     useEffect(() => {
         const qty = parseFloat(quantity) || 0;
@@ -72,9 +81,10 @@ export default function Sell() {
         })
         .then(data => {
             console.log("매도 요청 성공:", data);
-            // 매도 가능한 수량 업데이트
+            alert("매도 완료되었습니다.")
             setAvailableSell(prev => prev - parseFloat(quantity));
             setIsLoading(false);
+            onTradeComplete(); // 매도 후 상위 컴포넌트에 알림
         })
         .catch(error => {
             console.error("매도 요청 실패:", error);
@@ -84,9 +94,18 @@ export default function Sell() {
 
     useEffect(() => {
         if (stockName) {
-            setStockCode(stockName); // Set the stock code when stockName changes
+            setStockCode(stockName);
         }
     }, [stockName]);
+
+    const handleClickSell = () => {
+        if (sessionId) {
+          navigate('/');
+        } else {
+          alert("로그인시 이용가능합니다.");
+          navigate('/member/Login');
+        }
+    }
 
     return (
         <>
@@ -180,8 +199,8 @@ export default function Sell() {
                         </div>
                         <div className={styles.css_1gf7e9w}>
                             <div className={styles.css_xsmrp6}>
-                                <button title="초기화" className={styles.css_1xupxm9} onClick={() => { setStockCode(''); setQuantity(''); setPrice(''); setTotalAmount(''); }}>초기화</button>
-                                <button title="매도" className={styles.css_1xupxm11} disabled={isLoading}>
+                                <button type="button" title="초기화" className={styles.css_1xupxm9} onClick={() => { setStockCode(''); setQuantity(''); setPrice(''); setTotalAmount(''); }}>초기화</button>
+                                <button onClick={handleClickSell} type="submit" title="매도" className={styles.css_1xupxm11} disabled={isLoading}>
                                     {isLoading ? "진행중" : "매도"}
                                 </button>
                             </div>

@@ -70,6 +70,11 @@ CORS_ALLOW_CREDENTIALS = True
 # ---------------------
 
 
+CORS_ORIGIN_ALLOW_ALL = True #모든 도메인 허용
+CORS_ALLOW_CREDENTIALS = True
+# ---------------------
+
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # React 앱 도메인
 ]
