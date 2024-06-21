@@ -100,7 +100,7 @@ export default function Buy({ onTradeComplete }) {
     
     const handleClickBuy = () => {
         if (sessionId) {
-          navigate('/');
+          return;
         } else {
           alert("로그인시 이용가능합니다.");
           navigate('/member/Login');
@@ -202,7 +202,7 @@ export default function Buy({ onTradeComplete }) {
                         <div className={styles.css_1gf7e9w}>
                             <div className={styles.css_xsmrp6}>
                                 <button title="초기화" className={styles.css_1xupxm9} onClick={() => { setStockCode(''); setQuantity(''); setPrice(''); setTotalAmount(''); }}>초기화</button>
-                                <button  title="매수" className={styles.css_1xupxm10} disabled={isLoading}>
+                                <button onClick={handleClickBuy}  title="매수" className={styles.css_1xupxm10} disabled={isLoading}>
                                     {isLoading ? "진행중" : "매수"}
                                 </button>
                             </div>
