@@ -18,7 +18,7 @@ export default function Balance() {
                 const result = response.data;
                 if (result.account_num) {
                     setAccountNum(result.account_num);
-                    console.log("getSession: " + result.account_num);
+                    console.log("getSession account: " + result.account_num);
                 } else {
                     console.error('Account not found:', result);
                 }
@@ -34,13 +34,13 @@ export default function Balance() {
         if (accountNum) {
             const fetchData = async () => {
                 try {
-                    const balanceResponse = await axios('http://127.0.0.1:8000/asset/balance/');
-                    setData(balanceResponse.data);
+                    // const balanceResponse = await axios('http://127.0.0.1:8000/asset/balance/');
+                    // setData(balanceResponse.data);
 
                     const detailResponse = await axios.post('http://127.0.0.1:8000/asset/detailBalance/', { account_num: accountNum });
                     setDetailData(detailResponse.data);
 
-                    console.log(balanceResponse.data);
+                    // console.log(balanceResponse.data);
                     console.log(detailResponse.data);
                 } catch (error) {
                     console.error("잔액 데이터를 가져오는 중 에러 발생:", error);
@@ -51,7 +51,7 @@ export default function Balance() {
         }
     }, [accountNum]);
 
-    if (!data || !detailData) {
+    if (!detailData || !detailData) {
         return <div>Loading...</div>; // 데이터가 로드되기 전에는 로딩 상태 표시
     }
 

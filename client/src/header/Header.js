@@ -39,7 +39,6 @@ function Header() {
   const handleLogout = async () => {
     try {
       window.sessionStorage.clear();
-      localStorage.clear();
       alert("로그아웃 성공");
       setIsLoggedIn(false); //로그인 상태 false로 변환
       navigate('/member/Login');

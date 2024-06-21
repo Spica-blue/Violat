@@ -1,9 +1,30 @@
 import { useEffect, useState } from 'react';
 import styles from '../css/TradeLog.module.css';
+import axios from 'axios';
 
 export default function TradeLog({ reloadLog }) {
     const [logData, setLogData] = useState([]);
     const sessionId = window.sessionStorage.getItem("sessionid");
+    const [accountNum, setAccountNum] = useState(null); // 계좌 번호 상태 추가
+
+    useEffect(() => {
+        const getSession = async () => {
+            try {
+                const response = await axios.post('http://127.0.0.1:8000/asset/getAccountNum/', { sessionId: sessionId });
+                const result = response.data;
+                if (result.account_num) {
+                    setAccountNum(result.account_num);
+                    console.log("getSession: " + result.account_num);
+                } else {
+                    console.error('Account not found:', result);
+                }
+            } catch (error) {
+                console.error("계좌 번호를 가져오는 중 에러 발생:", error);
+            }
+        };
+
+        getSession();
+    }, [sessionId]);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/asset/tradeLog')
@@ -21,6 +42,23 @@ export default function TradeLog({ reloadLog }) {
             setLogData([]); // 기본값 설정
         });
     }, [reloadLog]);
+
+
+    useEffect(() => {
+        if (accountNum) {
+            const fetchData = async () => {
+                try {
+                    const detailResponse = await axios.post('http://127.0.0.1:8000/asset/inDeTradeLog/', { account_num: accountNum });
+                    setLogData(detailResponse.data);
+                    console.log(detailResponse.data);
+                } catch (error) {
+                    console.error("잔액 데이터를 가져오는 중 에러 발생:", error);
+                }
+            };
+
+            fetchData();
+        }
+    }, [accountNum]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);

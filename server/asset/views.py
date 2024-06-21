@@ -21,7 +21,7 @@ from pymongo import DESCENDING
 # from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-logger = logging.getLogger('asset')
+logger = logging.getLogger(__name__)
 
 uri = "mongodb+srv://admin:admin1234@cluster0.eguqpjc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri)
@@ -44,8 +44,12 @@ class BalanceView(View):
     @csrf_exempt
     def post(request):
         position = db['position']
+        
+        data = json.loads(request.body)
+        account_num = data.get('account_num')
+        
         result = position.find(
-            {"account_num": "1111"},
+            {"account_num": account_num},
             {'_id': 0, 'account_num': 1, 'stock_code': 1, 'buy_or_sell': 1, 'trade_quantity': 1, 'trade_price': 1, 'order_price': 1, 'trade_time': 1}
         ).sort('trade_time', DESCENDING)
         
@@ -54,13 +58,12 @@ class BalanceView(View):
             item['account_num'] = str(item['account_num'])
             data_list.append(item)
             
-        return JsonResponse({'message': 'POST request not implemented'}, status=405)
+        return JsonResponse(data_list, status=405)
     
     
 @csrf_exempt
 def detail_balance(request):
     if request.method == 'POST':
-        
         data = json.loads(request.body)
         account_num = data.get('account_num')
         
@@ -68,10 +71,13 @@ def detail_balance(request):
         position = db['position']
 
         account_result = account.find_one({'account_num': account_num}, {'_id': 0, 'account_num': 1, 'deposit': 1, 'deposit_limit': 1})
+
+        if not account_result:
+            return JsonResponse({"error": "Account not found"}, status=404)
+
         position_result = list(position.find({'account_num': account_num}, {'_id': 0, 'account_num': 1, 'stock_code': 1, 'stock_quantity': 1, 'average_price': 1}))
 
         total_buy = round(sum(p['stock_quantity'] * p['average_price'] for p in position_result))
-        # Assuming that current_price is obtained from an external service
         total_eval = round(sum(p['stock_quantity'] * get_current_price(p['stock_code']) for p in position_result))
         total_profit_loss = round(total_eval - total_buy)
         total_profit_loss_rate = round((total_profit_loss / total_buy) * 100) if total_buy != 0 else 0
@@ -81,11 +87,11 @@ def detail_balance(request):
         account_result['total_eval'] = total_eval
         account_result['total_profit_loss_rate'] = total_profit_loss_rate
 
-        # Round deposit and deposit_limit as well
         account_result['deposit'] = round(account_result['deposit'])
         account_result['deposit_limit'] = round(account_result['deposit_limit'])
 
         return JsonResponse(account_result, safe=False)
+
 
 def get_current_price(stock_code):
     # Dummy implementation, replace with actual logic to get the current price

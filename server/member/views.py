@@ -98,8 +98,8 @@ def signup(request):
     if collection.find_one({'id': username}):
       return Response({'success': False, 'message': '이미 존재하는 아이디입니다.'}, status=400)
     
-    account_number = random.randint(10000, 99999)
-    print("계좌 생성", account_number, flush=True)
+    account_number = str(random.randint(10000, 99999))
+    print("계좌 생성", account_number, flush=True);
 
     new_user = {
       'id': username,
@@ -162,6 +162,9 @@ def deleteUser(request):
         return Response({'message' : '회원탈퇴 처리 중 오류 발생', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
-@api_view(['GET'])
-def check():
-  print('')
+# @api_view(['GET'])
+# def check():
+#   collection = db["member"]
+#   user = collection.find_one({'account_num': get_account}, {'_id': 0, 'id': 0, 'pwd': 0, 'account_num': 1})
+#   get_account = user.get('account_num')
+#   return Response({'account': get_account})
