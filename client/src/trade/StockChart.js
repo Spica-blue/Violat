@@ -36,11 +36,11 @@ const StockChart = () => {
 
     const fetchRealtimeData = async () => {
         try {
-            console.log("realtime에 들어온 stockname:",stockName)
+            // console.log("realtime에 들어온 stockname:",stockName)
             const response = await axios.post('http://localhost:8000/trade/stock-info/', { stock_name: stockName });
             const price = parseFloat(response.data.current_price.replace(/,/g, ''));
             setCurrentPrice(price);
-            console.log("실시간 : ", response.data)
+            // console.log("실시간 : ", response.data)
             const data = {
                 date: new Date(),
                 price
@@ -50,7 +50,7 @@ const StockChart = () => {
                 if (newData.length > 60) {
                     newData.shift();
                 }
-                console.log("업데이트된 실시간 데이터:", newData);
+                // console.log("업데이트된 실시간 데이터:", newData);
                 return newData;
             });
         } catch (error) {
