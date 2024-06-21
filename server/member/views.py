@@ -39,7 +39,7 @@ def login(request):
         return Response({'message': 'ID와 비밀번호를 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     
     collection = db["member"]
-    user = collection.find_one({'id': input_id, 'pwd': input_pwd, 'account_num': get_account}, {'_id': 0, 'id': 1, 'pwd': 1, 'account_num': 1})
+    user = collection.find_one({'id': input_id, 'pwd': input_pwd}, {'_id': 0, 'id': 1, 'pwd': 1, 'account_num': 1})
     get_account = user.get('account_num')
     print("user : ", user, flush=True)
     if user:
@@ -162,8 +162,9 @@ def deleteUser(request):
         return Response({'message' : '회원탈퇴 처리 중 오류 발생', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
-@api_view(['GET'])
-def check():
-  collection = db["member"]
-  user = collection.find_one({'account_num': get_account}, {'_id': 0, 'id': 0, 'pwd': 0, 'account_num': 1})
-  get_account = user.get('account_num')
+# @api_view(['GET'])
+# def check():
+#   collection = db["member"]
+#   user = collection.find_one({'account_num': get_account}, {'_id': 0, 'id': 0, 'pwd': 0, 'account_num': 1})
+#   get_account = user.get('account_num')
+#   return Response({'account': get_account})
