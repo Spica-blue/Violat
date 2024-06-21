@@ -28,6 +28,7 @@ function Mypage() {
       });
       console.log("탈퇴: ", response.data);
       window.sessionStorage.clear();
+      localStorage.clear();
       alert('회원탈퇴가 되었습니다.');
       setUserId(null);
       navigate('/');
