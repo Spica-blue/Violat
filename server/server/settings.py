@@ -60,6 +60,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 CORS_ORIGIN_ALLOW_ALL = True #모든 도메인 허용
 CORS_ALLOW_CREDENTIALS = True

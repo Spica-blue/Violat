@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.contrib.auth.models import User
 
 # Django 설정 모듈을 환경 변수로 지정
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
@@ -29,45 +30,44 @@ db = client["violat"]
 def login(request):
     input_id = request.data.get('id') #Login.js const values(id, password)
     input_pwd = request.data.get('password')
-    account = request.data.get('account')
     
     print("inputid : ", input_id, flush=True)
     print("inputpwd : ", input_pwd, flush=True)
-    print("111111111111111111")
-    print("account : ", account, flush=True)
     
     if not input_id or not input_pwd:
         return Response({'message': 'ID와 비밀번호를 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     
     collection = db["member"]
-    user = collection.find_one({'id': input_id, 'pwd': input_pwd, 'account': account}, {'_id': 0, 'id': 1, 'pwd': 1, 'account': 1})
+    user = collection.find_one({'id': input_id, 'pwd': input_pwd}, {'_id': 0, 'id': 1, 'pwd': 1})
     print("user : ", user, flush=True)
     if user:
         print("들어옴ㅁㅁㅁㅁㅁ", flush=True)
-        # django_user, created = User.objects.get_or_create(username=input_id)
-        # print("django_user:",django_user, flush=True)
-        # print("created:",created, flush=True)
-        # print("password:",django_user.check_password(input_pwd), flush=True)
-        # if created or not django_user.check_password(input_pwd):
-        #     django_user.set_password(input_pwd)
-        #     django_user.save()
-        
-        auth_user = authenticate(username=input_id, password=input_pwd)
-        print("auth_user:",auth_user, flush=True)
-        if auth_user is not None:
-            print("유저 들어옴",flush=True)
-            auth_login(request, auth_user)
-            print("auth_login:",auth_login,flush=True)
+        try:
+            django_user, created = User.objects.get_or_create(username=input_id)
+            print("django_user:", django_user, flush=True)
+            print("created:", created, flush=True)
             
-            # return Response({
-            #     'refresh': str(refresh),
-            #     'access': str(refresh.access_token),
-            # }, status=status.HTTP_200_OK)
-            return Response({'message': '로그인 성공'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': '로그인 실패. 다시 시도해주세요.'}, status=status.HTTP_401_UNAUTHORIZED)
+            if created or not django_user.check_password(input_pwd):
+                django_user.set_password(input_pwd)
+                django_user.save()
+            
+            auth_user = authenticate(request, username=input_id, password=input_pwd)
+            print("auth_user:", auth_user, flush=True)
+            if auth_user is not None:
+                print("유저 들어옴", flush=True)
+                auth_login(request, auth_user)
+                print("auth_login:", auth_login, flush=True)
+                return Response({'message': '로그인 성공'}, status=status.HTTP_200_OK)
+            else:
+                print("Authentication failed", flush=True)
+                return Response({'message': '로그인 실패. 다시 시도해주세요.'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}", flush=True)
+            return Response({'message': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
+        print("User not found", flush=True)
         return Response({'message': '로그인 실패. 다시 시도해주세요.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 # @api_view(['GET'])
@@ -98,7 +98,7 @@ def signup(request):
     new_user = {
       'id': username,
       'pwd': password,
-      'account': account_number
+      'account_num': account_number
     }
 
     collection.insert_one(new_user)

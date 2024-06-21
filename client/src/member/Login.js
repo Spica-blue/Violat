@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './Login.module.css';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -7,25 +7,13 @@ function Login() {
   const [values, setValues] = useState({
     id: '',
     password: '',
-    account: '',
   });
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const API_URL = 'http://127.0.0.1:8000/api/login/';
   const sessionId = window.sessionStorage.getItem("sessionid");
-  const sessionAccount = window.sessionStorage.getItem("sessionaccount");
 
-  useEffect(() => {
-    const storedAccount = localStorage.getItem('loginAccount');
-    console.log("account값",storedAccount);
-    if (storedAccount) {
-      setValues((prevValues) => ({
-        ...prevValues,
-        account: storedAccount,
-      }));
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,18 +27,12 @@ function Login() {
     console.log("값:",values)
     e.preventDefault();
     try {
-      console.log("에러")
       const response = await axios.post(API_URL, values);
-      console.log("에러2")
       console.log('로그인 성공:', response.data.message);
       if(response.data.message === "로그인 성공"){
         console.log("if문 들어옴");
         alert("로그인 성공");
-        require([
-          account
-        ])
         window.sessionStorage.setItem("sessionid", values.id)
-        window.sessionStorage.setItem("sessionaccount", values.account)
         setError(null);
         navigate('/'); // 로그인 성공 시 메인 페이지로 이동
         window.location.reload();
@@ -63,7 +45,7 @@ function Login() {
     }
   };
 
-  console.log("세션 확인!!!", sessionId, sessionAccount);
+  console.log("세션 확인!!!", sessionId);
 
   return (
     <div className={styles.APP}>

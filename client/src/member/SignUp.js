@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 function SignUp() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  // const [account, setAccount] = useState('');
   const [confirm, setConfirm] = useState('');
   const [idError, setIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -15,8 +14,6 @@ function SignUp() {
   const [isIdAvailable, setIsIdAvailable] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
-  const random = Math.floor(Math.random() * 89999) + 10000;
-  // setAccount(random);
 
   const onChangeIdHandler = (e) => {
     const idValue = e.target.value;
@@ -116,7 +113,6 @@ function SignUp() {
       const response = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password, confirm });
       if (response.data.success) {
         localStorage.setItem('loginId', id);
-        localStorage.setItem('loginAccount', random);
         alert('회원가입이 완료되었습니다')
         navigate('/member/login');
       } else {
