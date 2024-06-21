@@ -99,7 +99,7 @@ export default function Buy({ onTradeComplete }) {
     
     const handleClickBuy = () => {
         if (sessionId) {
-          navigate('/');
+          return;
         } else {
           alert("로그인시 이용가능합니다.");
           navigate('/member/Login');

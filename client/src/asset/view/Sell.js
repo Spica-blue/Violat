@@ -100,7 +100,7 @@ export default function Sell({ onTradeComplete }) {
 
     const handleClickSell = () => {
         if (sessionId) {
-          navigate('/');
+          return;
         } else {
           alert("로그인시 이용가능합니다.");
           navigate('/member/Login');
