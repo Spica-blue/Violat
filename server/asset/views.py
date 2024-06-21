@@ -466,6 +466,42 @@ def inde_trade_log(request):
         return JsonResponse(data_list, safe=False)
         
     
+def account_modify(request):
+    print("계좌 들어옴",flush=True)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            logger.info(f"Received account_modify request: {data}")
+            account_num = data.get('account_num')
+            deposit = data.get('deposit')
+            deposit_limit = data.get('deposit_limit')
+            # print("계ㅔㅔㅔㅔㅔ좌:", account_num, flush=True)
+            
+            account = db['account']
+            
+            print("계좌 번호 확인:",account.find_one({'account_num': account_num}))
+            check = account.find_one({'account_num': account_num})
+            
+            if check:
+                if isinstance(deposit, str):
+                    deposit = int(deposit)
+                if isinstance(deposit_limit, str):
+                    deposit_limit = int(deposit_limit)
+                
+                account.update_one(
+                    {"account_num": account_num}, 
+                    {"$set": {"deposit": deposit, "deposit_limit": deposit_limit}}
+                )
+                return JsonResponse({"message": "한도 변경 수정 successfully!"})
+            
+            
+            result = account.insert_one(data)
+            logger.info(f"한도 변경 successfully: {result}")
+
+            return JsonResponse({"message": "한도 변경 successfully!"})
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+            
 
 # class AssetDistributionView(View):
 #     def get(self, request, account_num):

@@ -24,4 +24,5 @@ urlpatterns = [
        path('getAccountNum/', views.get_account, name='getAccountNum'),
        path('inDeTradeLog/', views.inde_trade_log, name='inDeTradeLog'),
        # path('distribution/<str:account_num>/', AssetDistributionView.as_view(), name='asset_distribution'),
+       path('account/', views.account_modify, name='account_modify'),
 ]

@@ -73,7 +73,7 @@ function Header() {
 
   const handleClickAccount = () => {
     if (isLoggedIn) {
-      navigate('/memeber/Account');
+      navigate('/member/Account');
     } else {
       alert("로그인시 이용가능합니다.");
       navigate('/member/Login');

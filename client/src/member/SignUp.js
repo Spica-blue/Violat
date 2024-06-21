@@ -109,18 +109,59 @@ function SignUp() {
 
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password, confirm });
-      if (response.data.success) {
-        const accountNum = response.data.account_num;
-        window.sessionStorage.setItem('loginId', id);
-        window.sessionStorage.setItem('loginAccount', accountNum)
-        alert('회원가입이 완료되었습니다')
-        navigate('/member/login');
-      } else {
-        alert(response.data.message || '회원가입에 실패하였습니다. 다시 시도해주세요.');
+      const signupResponse = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password }, {
+        withCredentials: true,
+      });
+      if (signupResponse.data.success) {
+        // 회원가입 성공 후 자동 로그인 처리
+        try {
+          const loginResponse = await axios.post('http://127.0.0.1:8000/api/login/', { id, password }, {
+            withCredentials: true,
+          });
+          if (loginResponse.status === 200) {
+            const requestBody = {
+              account_num: signupResponse.data.account_num,
+              deposit: 1000000,
+              deposit_limit: 1000000,
+            };
+            
+            fetch('http://127.0.0.1:8000/asset/account/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(requestBody),
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log("한도 변경 요청 성공:", data);
+                // alert("한도 변경 완료되었습니다.")
+            })
+            .catch(error => {
+                console.error("한도 변경 실패:", error);
+            });
+            alert('회원가입이 완료되었습니다');
+            navigate('/member/login');
+          } else {
+            alert('회원가입에 실패하였습니다. 다시 시도해주세요.1');
+            console.log("실패1");
+          }
+        } catch (error) {
+          alert('회원가입에 실패하였습니다. 다시 시도해주세요.2');
+          console.log("실패2");
+          console.error(error);
+        }
+      } else{
+        alert(signupResponse.data.message || '회원가입 실패2.5')
       }
-    } catch (error) {
-      alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+    } catch(error){
+      alert('회원가입 실패3');
+      console.log("실패3");
       console.error(error);
     }
   }
