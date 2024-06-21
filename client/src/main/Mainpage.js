@@ -10,12 +10,13 @@ function Mainpage() {
   return (
     <>
       <div className={styles.body}>
-        <div className={styles.title}>
+        {/* <div className={styles.title}>
           <div className={styles.h1}>VIOLAT</div>
           <div>
           </div>
-        </div>
+        </div> */}
         <div className={styles.box1}>
+        <div className={styles.h1}>VIOLAT</div>
           <div className={styles.coment}>
             <div className={styles.h3}>
             주식 모의투자 사이트

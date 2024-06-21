@@ -107,19 +107,35 @@ function SignUp() {
       return;
     }
 
-    
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password, confirm });
-      if (response.data.success) {
-        localStorage.setItem('loginId', id);
-        alert('회원가입이 완료되었습니다')
-        navigate('/member/login');
-      } else {
-        alert(response.data.message || '회원가입에 실패하였습니다. 다시 시도해주세요.');
+      const signupResponse = await axios.post('http://127.0.0.1:8000/member/signup/', { id, password }, {
+        withCredentials: true,
+      });
+      if (signupResponse.data.success) {
+        // 회원가입 성공 후 자동 로그인 처리
+        try {
+          const loginResponse = await axios.post('http://127.0.0.1:8000/member/login/', { username: id, password }, {
+            withCredentials: true,
+          });
+          if (loginResponse.status === 200) {
+            alert('회원가입이 완료되었습니다');
+            navigate('/member/login');
+          } else {
+            alert('회원가입에 실패하였습니다. 다시 시도해주세요.1');
+            console.log("실패1");
+          }
+        } catch (error) {
+          alert('회원가입에 실패하였습니다. 다시 시도해주세요.2');
+          console.log("실패2");
+          console.error(error);
+        }
+      } else{
+        alert(signupResponse.data.message || '회원가입 실패2.5')
       }
-    } catch (error) {
-      alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+    } catch(error){
+      alert('회원가입 실패3');
+      console.log("실패3");
       console.error(error);
     }
   }
