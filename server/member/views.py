@@ -39,8 +39,8 @@ def login(request):
         return Response({'message': 'ID와 비밀번호를 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     
     collection = db["member"]
-    get_account = user.get('account_num')
     user = collection.find_one({'id': input_id, 'pwd': input_pwd, 'account_num': get_account}, {'_id': 0, 'id': 1, 'pwd': 1, 'account_num': 1})
+    get_account = user.get('account_num')
     print("user : ", user, flush=True)
     if user:
         print("들어옴ㅁㅁㅁㅁㅁ", flush=True)
@@ -98,7 +98,7 @@ def signup(request):
     if collection.find_one({'id': username}):
       return Response({'success': False, 'message': '이미 존재하는 아이디입니다.'}, status=400)
     
-    account_number = random.randint(10000, 99999)
+    account_number = str(random.randint(10000, 99999))
     print("계좌 생성", account_number, flush=True);
 
     new_user = {
@@ -164,4 +164,6 @@ def deleteUser(request):
 
 @api_view(['GET'])
 def check():
-  print('')
+  collection = db["member"]
+  user = collection.find_one({'account_num': get_account}, {'_id': 0, 'id': 0, 'pwd': 0, 'account_num': 1})
+  get_account = user.get('account_num')
