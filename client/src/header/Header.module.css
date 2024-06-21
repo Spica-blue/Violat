@@ -8,6 +8,7 @@
 .logoImg {
   width: 3.5rem;
   margin: 5px 1rem;
+  cursor: pointer;
 }
 
 .header {

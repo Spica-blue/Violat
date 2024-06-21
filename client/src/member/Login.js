@@ -43,7 +43,7 @@ function Login() {
       // localStorage.setItem('access_token', response.data.access);
     } catch (error) {
       console.error('로그인 실패:', error.response ? error.response.data : error.message);
-      setError('로그인 실패. 다시 시도해주세요.');
+      setError('아이디 또는 비밀번호가 일치하지 않습니다');
     }
   };
 
