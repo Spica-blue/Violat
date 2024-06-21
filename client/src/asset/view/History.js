@@ -72,9 +72,9 @@ export default function History() {
                                         </div>
                                     </div>
                                     <div className={styles.HistoryFilter__LayoutCell3}>
-                                        <div className={styles.HistoryFilter__category}>코인선택</div>
+                                        <div className={styles.HistoryFilter__category}>주식선택</div>
                                         <div className={styles.SearchInput}>
-                                            <input type="text" className={styles.FormBlock__InputText} placeholder="전체" value=""/>
+                                            <input type="text" className={styles.FormBlock__InputText} placeholder="전체"/>
                                             <button className={styles.SearchInput__SearchBtn}>찾기</button>
                                         </div>
                                     </div>
@@ -116,9 +116,9 @@ export default function History() {
                                 <div style={{ height: "687px", overflow: "auto" }}>
                                     <table className={styles.AmountTable__BodyTable}>
                                         <colgroup>
-                                            <col width="94"/>
-                                            <col width="64"/>
-                                            <col width="48"/>
+                                            <col width="110"/>
+                                            <col width="90"/>
+                                            <col width="50"/>
                                             <col width="40"/>
                                             <col width="144"/>
                                             <col width="144"/>
@@ -135,16 +135,16 @@ export default function History() {
                                             ) : (
                                                 logData.map((log, index) => (
                                                     <tr className={styles.AmountTable__row} key={index}>
-                                                        <td className={styles.AmountTable__cell}>{formatDate(log.execution_time)}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.coin}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.market}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.type}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.quantity.toFixed(1)}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.price.toFixed(1)}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.amount.toFixed(1)}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.fee.toFixed(1)}</td>
-                                                        <td className={styles.AmountTable__cell}>{log.settlement_amount.toFixed(1)}</td>
-                                                        <td className={styles.AmountTable__cell}>{formatDate(log.order_time)}</td>
+                                                        {/* <td className={styles.AmountTable__cell}>{formatDate()}</td> */}
+                                                        <td className={styles.AmountTable__cell}>{formatDate(log.trade_time)}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.stock_code}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.buy_or_sell}</td>
+                                                        <td className={styles.AmountTable__cell}>{}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.trade_quantity}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.trade_price}</td>
+                                                        <td className={styles.AmountTable__cell}>{log.order_price}</td>
+                                                        {/* <td className={styles.AmountTable__cell}>{log.trad}</td> */}
+                                                        {/* <td className={styles.AmountTable__cell}>{log.settlement_amount}</td> */}
                                                     </tr>
                                                 ))
                                             )}

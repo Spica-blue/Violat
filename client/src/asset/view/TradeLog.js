@@ -62,8 +62,8 @@ export default function TradeLog({ reloadLog }) {
                                         <th>주문일자</th>
                                         <th>종목명</th>
                                         <th>매수/매도</th>
-                                        <th>주문가</th>
                                         <th>주문총액</th>
+                                        <th>주문가</th>
                                         <th>주문량</th>
                                     </tr>
                                 </thead>

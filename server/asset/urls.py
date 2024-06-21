@@ -21,5 +21,6 @@ urlpatterns = [
        path('tradeLog/', TradeLogView.as_view(), name='tradeLog'),
        path('availSell/', views.avail_sell, name='availSell'),
        path('sellStock/', views.sell_stock, name='sellStock'),
+       path('getAccountNum/', views.get_account, name='getAccountNum'),
        # path('distribution/<str:account_num>/', AssetDistributionView.as_view(), name='asset_distribution'),
 ]
