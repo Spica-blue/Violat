@@ -1,24 +1,24 @@
 /* src/main/Mainpage.css */
 .h1{
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 600;
   margin-top: 10px;
+  color: white;
 }
 
-
-
 .body {
-  background-image: url('https://wbstatic.webullfintech.com/v1/webull-us-g/assets/77ac67cea715a7e26a86e4c874064b15.webp');
+  /* background-image: url('https://wbstatic.webullfintech.com/v1/webull-us-g/assets/77ac67cea715a7e26a86e4c874064b15.webp'); */
+  background-color: #2B5EF5;
   height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
 }
-
+/* 
 .title {
   display: flex;
   color: white;
   justify-content: center;
-}
+} */
 
 
 .box1 {

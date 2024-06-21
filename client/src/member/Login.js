@@ -12,6 +12,7 @@ function Login() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const API_URL = 'http://127.0.0.1:8000/api/login/';
+  const AC_URL = 'http://127.0.0.1:8000/api/check/';
   const sessionId = window.sessionStorage.getItem("sessionid");
 
 
@@ -32,7 +33,9 @@ function Login() {
       if(response.data.message === "로그인 성공"){
         console.log("if문 들어옴");
         alert("로그인 성공");
+        const accountNum = response.data.account_num;
         window.sessionStorage.setItem("sessionid", values.id)
+        window.sessionStorage.setItem('loginAccount', accountNum)
         setError(null);
         navigate('/'); // 로그인 성공 시 메인 페이지로 이동
         window.location.reload();

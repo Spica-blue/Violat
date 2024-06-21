@@ -80,6 +80,7 @@ export default function Buy({ onTradeComplete }) {
         })
         .then(data => {
             console.log("매수 요청 성공:", data);
+            alert("매수 완료되었습니다.")
             setIsLoading(false);
             setAvailableBalance(prevBalance => prevBalance - totalAmount);
             onTradeComplete(); // 매수 후 상위 컴포넌트에 알림

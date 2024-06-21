@@ -22,4 +22,5 @@ urlpatterns = [
        path('availSell/', views.avail_sell, name='availSell'),
        path('sellStock/', views.sell_stock, name='sellStock'),
        # path('distribution/<str:account_num>/', AssetDistributionView.as_view(), name='asset_distribution'),
+       path('account/', views.account_modify, name='account_modify'),
 ]

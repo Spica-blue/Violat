@@ -51,7 +51,7 @@ export default function TradeLog({ reloadLog }) {
                             <table>
                                 <colgroup>
                                     <col width="150px" />
-                                    <col width="90px" />
+                                    <col width="100px" />
                                     <col width="70px" />
                                     <col />
                                     <col width="64px" />
@@ -72,7 +72,7 @@ export default function TradeLog({ reloadLog }) {
                             <table>
                                 <colgroup>
                                     <col width="150px" />
-                                    <col width="90px" />
+                                    <col width="100px" />
                                     <col width="70px" />
                                     <col />
                                     <col width="64px" />
