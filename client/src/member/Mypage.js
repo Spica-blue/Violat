@@ -43,7 +43,7 @@ function Mypage() {
       console.log("마이페이지1테스트")
       const sessionId = window.sessionStorage.getItem("sessionid");
       console.log("세션값:",sessionId)
-      const sessionAccount = localStorage.getItem("loginAccount");
+      const sessionAccount = window.sessionStorage.getItem("loginAccount");
       console.log("세션값2:",sessionAccount)
       if (sessionId) {
         setUserId(sessionId);

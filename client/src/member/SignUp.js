@@ -109,16 +109,42 @@ function SignUp() {
 
 
     try {
-      const signupResponse = await axios.post('http://127.0.0.1:8000/member/signup/', { id, password }, {
+      const signupResponse = await axios.post('http://127.0.0.1:8000/api/signup/', { id, password }, {
         withCredentials: true,
       });
       if (signupResponse.data.success) {
         // 회원가입 성공 후 자동 로그인 처리
         try {
-          const loginResponse = await axios.post('http://127.0.0.1:8000/member/login/', { username: id, password }, {
+          const loginResponse = await axios.post('http://127.0.0.1:8000/api/login/', { id, password }, {
             withCredentials: true,
           });
           if (loginResponse.status === 200) {
+            const requestBody = {
+              account_num: signupResponse.data.account_num,
+              deposit: 1000000,
+              deposit_limit: 1000000,
+            };
+            
+            fetch('http://127.0.0.1:8000/asset/account/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(requestBody),
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log("한도 변경 요청 성공:", data);
+                // alert("한도 변경 완료되었습니다.")
+            })
+            .catch(error => {
+                console.error("한도 변경 실패:", error);
+            });
             alert('회원가입이 완료되었습니다');
             navigate('/member/login');
           } else {
