@@ -438,6 +438,29 @@ def get_account(request):
             return JsonResponse({"status": 200})
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+
+@csrf_exempt
+def inde_trade_log(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        account_num = data.get('account_num')  # session_id가 아닌 account_num으로 수정
+        trade = db['trade']
+        # 필요한 모든 필드를 포함하여 결과를 반환
+        result = trade.find(
+            {"account_num": account_num},
+            {'_id': 0, 'account_num': 1, 'stock_code': 1, 'buy_or_sell': 1, 'trade_quantity': 1, 'trade_price': 1, 'order_price': 1, 'trade_time': 1}
+        ).sort('trade_time', DESCENDING)
+        
+        data_list = []
+        for item in result:
+            item['account_num'] = str(item['account_num'])
+            data_list.append(item)
+        print("sljflskdjflsjdflkjjklsjflks")
+        logger.info("sljflskdjfl")
+        return JsonResponse(data_list, safe=False)
+        
+    
+
 # class AssetDistributionView(View):
 #     def get(self, request, account_num):
 #         try:

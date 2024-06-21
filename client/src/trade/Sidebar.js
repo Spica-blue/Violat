@@ -47,7 +47,7 @@ function Sidebar({ onStockSelect }) {
       const response = await axios.post('http://localhost:8000/trade/connect-realtime-data/');
       console.log(response.data.message);
     } catch (error) {
-      console.log("실시간 데이터 연결 중 에러 발생:", error);
+      // console.log("실시간 데이터 연결 중 에러 발생:", error);
     }
   };
 
@@ -146,7 +146,7 @@ function Sidebar({ onStockSelect }) {
           </li>
           <li className={styles.category}>
             <Link 
-              to="#" 
+              to="/asset/possess" 
               className={`${styles.on} ${activeTab === '보유' ? styles.active : ''}`} 
               title="보유" 
               onClick={() => setActiveTab('보유')}
