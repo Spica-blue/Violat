@@ -14,3 +14,7 @@
 - DB : MongoDB
 - 협업도구 : GitHub, Discord
 - API : OpenAPI
+
+# 팀원
+- yongqyu49 : https://github.com/yongqyu49
+- lsw0798 : https://github.com/lsw0798
