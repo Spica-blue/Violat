@@ -9,6 +9,8 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 from base64 import b64decode
 import os
+import threading
+import time
 
 # AES256 DECODE
 def aes_cbc_base64_dec(key, iv, cipher_text):
@@ -37,7 +39,7 @@ def stockhoka_overseas_usa(data):
         "price_change": recvvalue[13],
         "trading_volume": recvvalue[7]
     }
-    print(stock_data)
+    # print(stock_data)
     return stock_data
 
 # 국내주식체결처리 출력라이브러리
@@ -52,14 +54,19 @@ def stockspurchase_domestic(data):
         "price_change": format(int(pValue[4]), ',d'),  # 전일대비 형식화
         "trading_volume": format(trading_volume, ',d')  # 거래대금 형식화
     }
-    print(stock_data)
+    # print(stock_data)
     filter_data = stock_data
     return stock_data
 
 # 모의 투자 환경에서 한국투자증권 API를 사용하여 브로커 객체를 생성합니다.
-key = "PSEPARn4Ehfa1NOEzoRMA1A3ZpruI99OtOwl"
-secret = "Vu5v2ivdN+uSo575W0VstxBf1LMLig21GKIN6a8hxduTQGb1nO0ZbeMjgxqmrUFmQ8e7RD+/M8rPoUIYlpLky/6EuyRStg5VhFHJoI1HQHNyh3UeMWqri17tonvBkL2FECy4/vtr5YohjyMvofEynt/DLyPtwaUGtwgnH7LQ9/qO+8m4CMs="
-acc_no = "50111987-01"
+# Load API credentials from environment variables to avoid committing secrets.
+key = os.getenv('KOREA_INVESTMENT_API_KEY')
+secret = os.getenv('KOREA_INVESTMENT_API_SECRET')
+acc_no = os.getenv('KOREA_INVESTMENT_ACCOUNT')
+
+if not key or not secret or not acc_no:
+    # Fail early in development if credentials are missing to avoid confusing errors later.
+    raise RuntimeError('KOREA_INVESTMENT_API_KEY, KOREA_INVESTMENT_API_SECRET and KOREA_INVESTMENT_ACCOUNT must be set in the environment')
 
 broker = KoreaInvestment(
     api_key=key,
@@ -102,19 +109,19 @@ def fetch_stock_names_and_codes():
 
 def save_all_stocks_and_codes_to_json():
     stock_data = fetch_stock_names_and_codes()
-    print("모든 종목: ", stock_data)
+    # print("모든 종목: ", stock_data)
     stock_data = stock_data.fillna('')
 
     stock_data_list = stock_data.to_dict(orient='records')
 
     with open('all_stock_codes3.json', 'w', encoding='utf-8') as file:
         json.dump(stock_data_list, file, ensure_ascii=False, indent=4)
-    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.")
+    # print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.")
 
 def load_stock_codes_from_json():
     with open('all_stock_codes3.json', 'r', encoding='utf-8') as file:
         stock_codes = json.load(file)
-        print("json 파일 읽기ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ", stock_codes)
+        # print("json 파일 읽기ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ", stock_codes)
     global stock_name_map
     stock_name_map = {stock['단축코드']: stock['한글명'] for stock in stock_codes}
     return stock_codes
@@ -137,17 +144,55 @@ def load_realtime_stock_data():
 
 # 열 이름에 맞추어 종목명을 통해 종목코드를 조회하는 함수
 def get_stock_code_by_name(stock_name):
-    kospi_symbols = broker.fetch_kospi_symbols()
-    kosdaq_symbols = broker.fetch_kosdaq_symbols()
-    all_symbols = pd.concat([kospi_symbols, kosdaq_symbols], ignore_index=True)
-    stock_code = all_symbols.loc[all_symbols['한글명'] == stock_name, '단축코드']
-    if not stock_code.empty:
-        return stock_code.values[0]
-    else:
-        return None
+    # Try fast lookup from cached mapping first (code -> name)
+    # stock_name_map is populated by `load_stock_codes_from_json()` when available.
+    # Reverse lookup: name -> code
+    for code, name in stock_name_map.items():
+        if name == stock_name:
+            return code
+
+    # If not found in cache, fall back to fetching from broker, but serialize
+    # broker.fetch_* calls to avoid mojito creating/removing the same temp files
+    # concurrently which causes PermissionError on Windows.
+    if not hasattr(get_stock_code_by_name, '_fetch_lock'):
+        get_stock_code_by_name._fetch_lock = threading.Lock()
+
+    retries = 3
+    delay = 0.5
+    for attempt in range(retries):
+        acquired = get_stock_code_by_name._fetch_lock.acquire(timeout=10)
+        if not acquired:
+            # couldn't acquire lock, wait and retry
+            time.sleep(delay)
+            continue
+        try:
+            try:
+                kospi_symbols = broker.fetch_kospi_symbols()
+                kosdaq_symbols = broker.fetch_kosdaq_symbols()
+                all_symbols = pd.concat([kospi_symbols, kosdaq_symbols], ignore_index=True)
+                stock_code = all_symbols.loc[all_symbols['한글명'] == stock_name, '단축코드']
+                if not stock_code.empty:
+                    # update cache for future lookups
+                    stock_name_map.update({r['단축코드']: r['한글명'] for r in all_symbols.to_dict(orient='records')})
+                    return stock_code.values[0]
+                else:
+                    return None
+            except PermissionError as e:
+                # mojito/djongo may lock temp files; retry a few times
+                if attempt < retries - 1:
+                    time.sleep(delay)
+                    delay *= 2
+                    continue
+                raise
+        finally:
+            try:
+                get_stock_code_by_name._fetch_lock.release()
+            except RuntimeError:
+                pass
+
+    return None
 
 def fetch_stock_info(stock_code, stock_name):
-    print("api에서 ")
     try:
         data = broker.fetch_price(stock_code)
         if 'output' not in data:
@@ -225,11 +270,11 @@ async def connect():
                 trid = recvstr[1]
 
                 if trid == "HDFSASP0":
-                    print("#### 해외주식 호가 ####")
+                    # print("#### 해외주식 호가 ####")
                     filter_data = stockhoka_overseas_usa(recvstr[3])
-                    print("if--------------", filter_data)
+                    # print("if--------------", filter_data)
                 elif trid == "H0STCNT0":
-                    print("#### 국내주식 체결 ####")
+                    # print("#### 국내주식 체결 ####")
                     filter_data = stockspurchase_domestic(recvstr[3]) 
                     for stock in all_stocks_data:
                         if stock['stock_code'] == filter_data['stock_code']:
@@ -238,8 +283,8 @@ async def connect():
                     update_stock_data(filter_data)
                     with open('realtime_stock_data.json', 'w', encoding='utf-8') as file:
                         json.dump(all_stocks_data, file, ensure_ascii=False, indent=4)
-                    print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.-----------------")
-                    print("if--------------", filter_data)
+                    # print("모든 종목 및 코드 데이터가 JSON 파일로 저장되었습니다.-----------------")
+                    # print("if--------------", filter_data)
                 else:
                     print(f"Unknown real-time data: {data}")
 
