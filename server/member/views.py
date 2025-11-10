@@ -153,12 +153,38 @@ def deleteUser(request):
         user_id = request.data.get('user_id')
         print("현재 id:", user_id, flush=True)
 
-        collection = db["member"]
-        collection.delete_one({'id': user_id})
+        # member 컬렉션에서 해당 user_id의 account_num 가져오기
+        member_collection = db["member"]
+        member_data = member_collection.find_one({'id': user_id})
+        
+        if not member_data:
+            return Response({'message': '사용자를 찾을 수 없습니다'}, status=status.HTTP_404_NOT_FOUND)
+        
+        account_num = member_data.get('account_num')
+        
+        # 1. member 컬렉션에서 삭제
+        member_collection.delete_one({'id': user_id})
+        print(f"Member {user_id} deleted", flush=True)
+        
+        # 2. account 컬렉션에서 삭제
+        if account_num:
+            account_collection = db["account"]
+            account_result = account_collection.delete_one({'account_num': account_num})
+            print(f"Account {account_num} deleted: {account_result.deleted_count}", flush=True)
+            
+            # 3. position 컬렉션에서 삭제
+            position_collection = db["position"]
+            position_result = position_collection.delete_many({'account_num': account_num})
+            print(f"Positions deleted: {position_result.deleted_count}", flush=True)
+            
+            # 4. trade 컬렉션에서 삭제
+            trade_collection = db["trade"]
+            trade_result = trade_collection.delete_many({'account_num': account_num})
+            print(f"Trades deleted: {trade_result.deleted_count}", flush=True)
         
         return Response({'message': '회원탈퇴 성공'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print("오류")
+        print("오류:", str(e), flush=True)
         return Response({'message' : '회원탈퇴 처리 중 오류 발생', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
