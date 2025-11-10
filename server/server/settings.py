@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     
-    'asset.apps.AssetConfig',
+    'portfolio.apps.PortfolioConfig',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'member',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'server.middleware.request_logging.RequestLoggingMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # CORS 추가
     'django.middleware.common.CommonMiddleware',  # CORS 추가
     'django.middleware.security.SecurityMiddleware',
@@ -124,16 +126,37 @@ REST_FRAMEWORK = {
 #     }
 # }
 
-DATABASES = {
+# Use local SQLite for development when USE_SQLITE=1 is set or when djongo is unavailable.
+USE_SQLITE = os.getenv('USE_SQLITE') == '1' or os.getenv('FORCE_SQLITE') == '1'
+if not USE_SQLITE:
+    try:
+        import djongo  # type: ignore
+    except Exception:
+        USE_SQLITE = True
+
+# During local development, if DEBUG=True, prefer SQLite to avoid djongo issues.
+# MongoDB는 views.py에서 pymongo로 직접 사용
+if DEBUG:
+    USE_SQLITE = True
+
+if USE_SQLITE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
         'default': {
             'ENGINE': 'djongo',
-            'NAME': 'django',
+            'NAME': 'violat',
             'ENFORCE_SCHEMA': False,
             'CLIENT': {
                 'host': 'mongodb+srv://admin:admin1234@cluster0.eguqpjc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-            }  
+            }
         }
-}
+    }
 
 # session setting
 # 클라이언트가 웹 브라우저를 close 시 세션 데이터 삭제 (default : False)
@@ -231,7 +254,7 @@ DEFAULT_LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        'asset': {
+        'portfolio': {
             'handlers': ['console'],
             'level': 'INFO',
         },

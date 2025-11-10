@@ -18,16 +18,16 @@ def get_all_stocks_view(request):
 @api_view(['POST'])
 def get_stock_info_view(request):  # 함수 이름 변경
     stock_name = request.data.get("stock_name")
-    print("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnname:",stock_name)
+    # print("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnname:",stock_name)
     if stock_name:
         stock_code = get_stock_code_by_name(stock_name)
-        print("stock_code::::", stock_code)
+        # print("stock_code::::", stock_code)
         if stock_code:
             resp = fetch_stock_info(stock_code, stock_name)
-            print("resppppppp", resp)
+            # print("resppppppp", resp)
             if resp is None:
                 return Response({"error": "데이터를 가져오지 못했습니다: {}".format(stock_name)}, status=500)
-            print("뷰에서 받은 데이터:", resp)  # 필터링된 데이터를 로그로 출력
+            # print("뷰에서 받은 데이터:", resp)  # 필터링된 데이터를 로그로 출력
             
             return Response(resp)
         else:

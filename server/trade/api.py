@@ -11,6 +11,12 @@ from base64 import b64decode
 import os
 import threading
 import time
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load .env file from project root
+env_path = Path(__file__).resolve().parent.parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
 
 # AES256 DECODE
 def aes_cbc_base64_dec(key, iv, cipher_text):
