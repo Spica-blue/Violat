@@ -70,22 +70,27 @@ key = os.getenv('KOREA_INVESTMENT_API_KEY')
 secret = os.getenv('KOREA_INVESTMENT_API_SECRET')
 acc_no = os.getenv('KOREA_INVESTMENT_ACCOUNT')
 
-if not key or not secret or not acc_no:
-    # Fail early in development if credentials are missing to avoid confusing errors later.
-    raise RuntimeError('KOREA_INVESTMENT_API_KEY, KOREA_INVESTMENT_API_SECRET and KOREA_INVESTMENT_ACCOUNT must be set in the environment')
-
-broker = KoreaInvestment(
-    api_key=key,
-    api_secret=secret,
-    acc_no=acc_no,
-    mock=True
-)
+# Allow running without API credentials for development/testing
+broker = None
+if key and secret and acc_no:
+    broker = KoreaInvestment(
+        api_key=key,
+        api_secret=secret,
+        acc_no=acc_no,
+        mock=True
+    )
+    print("Korea Investment API initialized successfully", flush=True)
+else:
+    print("Warning: Korea Investment API credentials not found. Trading features will be limited.", flush=True)
 
 filter_data = {}
 all_stocks_data = []
 stock_name_map = {}
 
 def fetch_stock_price(stock_code):
+    if not broker:
+        print(f"Warning: Cannot fetch stock price for {stock_code} - broker not initialized", flush=True)
+        return 0
     try:
         data = broker.fetch_price(stock_code)
         output = data.get('output', {})

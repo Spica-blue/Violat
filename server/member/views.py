@@ -98,8 +98,12 @@ def signup(request):
     if collection.find_one({'id': username}):
       return Response({'success': False, 'message': '이미 존재하는 아이디입니다.'}, status=400)
     
+    # MongoDB에서 중복되지 않는 계좌번호 생성
     account_number = str(random.randint(10000, 99999))
-    print("계좌 생성", account_number, flush=True);
+    while collection.find_one({'account_num': account_number}):
+      account_number = str(random.randint(10000, 99999))
+      
+    print("계좌 생성", account_number, flush=True)
 
     new_user = {
       'id': username,
