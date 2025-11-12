@@ -30,6 +30,8 @@ kosdaq_code.mst
 kospi_code_part2.tmp
 kospi_code.mst
 token.dat
+realtime_stock_data.json
+all_stock_codes*.json
 
 # Ignore Python bytecode files
 *.pyc
@@ -49,6 +51,14 @@ db.sqlite3
 
 # Docker
 .dockerignore
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
 
 # IDE
 .vscode/
